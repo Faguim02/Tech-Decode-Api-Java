@@ -8,14 +8,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 public class PostController {
@@ -38,8 +37,18 @@ public class PostController {
     }
 
     @GetMapping("post/")
-    public  ResponseEntity<List<PostModel>> findAllPosts() {
+    public ResponseEntity<List<PostModel>> findAllPosts() {
         return ResponseEntity.status(HttpStatus.OK).body(postRepository.findAll());
+    }
+
+    @GetMapping("post/{id}")
+    public ResponseEntity<Object> findOnePost(@PathVariable UUID id) {
+        Optional<PostModel> post0 = postRepository.findById(id);
+
+        if(post0.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Noticía não encontrada");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(post0);
     }
 
 }
