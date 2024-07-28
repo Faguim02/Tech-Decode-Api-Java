@@ -8,12 +8,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 public class PostController {
@@ -35,5 +37,9 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(postRepository.save(postModel));
     }
 
+    @GetMapping("post/")
+    public  ResponseEntity<List<PostModel>> findAllPosts() {
+        return ResponseEntity.status(HttpStatus.OK).body(postRepository.findAll());
+    }
 
 }
