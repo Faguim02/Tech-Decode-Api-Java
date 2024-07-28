@@ -16,11 +16,9 @@ public class PostModel implements Serializable {
     private UUID id;
     private String title;
     private String bannerUrl;
+    private String description;
     private String font;
     private String data_at;
-
-    @OneToMany(mappedBy = "post")
-    private List<DescriptionPostModel> descriptionPost;
 
     @OneToMany(mappedBy = "post")
     private List<CommentModel> comments;
@@ -57,20 +55,20 @@ public class PostModel implements Serializable {
         this.font = font;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getData_at() {
         return data_at;
     }
 
     public void setData_at(String data_at) {
         this.data_at = data_at;
-    }
-
-    public List<DescriptionPostModel> getDescriptionPost() {
-        return descriptionPost;
-    }
-
-    public void setDescriptionPost(List<DescriptionPostModel> descriptionPost) {
-        this.descriptionPost = descriptionPost;
     }
 
     public List<CommentModel> getComments() {

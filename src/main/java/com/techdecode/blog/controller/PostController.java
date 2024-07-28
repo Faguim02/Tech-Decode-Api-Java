@@ -2,7 +2,6 @@ package com.techdecode.blog.controller;
 
 import com.techdecode.blog.dtos.PostDto;
 import com.techdecode.blog.models.PostModel;
-import com.techdecode.blog.repository.DescriptionPostRepository;
 import com.techdecode.blog.repository.PostRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -18,8 +17,6 @@ public class PostController {
 
     @Autowired
     PostRepository postRepository;
-    @Autowired
-    DescriptionPostRepository descriptionPostRepository;
 
     @PostMapping("post/")
     public ResponseEntity<PostModel> createPost(@RequestBody @Valid PostDto postDto) {
