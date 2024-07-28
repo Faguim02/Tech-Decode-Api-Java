@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @RestController
 public class PostController {
 
@@ -21,7 +24,13 @@ public class PostController {
     @PostMapping("post/")
     public ResponseEntity<PostModel> createPost(@RequestBody @Valid PostDto postDto) {
         var postModel = new PostModel();
+
         BeanUtils.copyProperties(postDto, postModel);
+
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String date_at = localDate.format(formatter);
+        postModel.setDate_at(date_at);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(postRepository.save(postModel));
     }

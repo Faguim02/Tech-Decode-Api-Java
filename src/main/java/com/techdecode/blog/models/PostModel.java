@@ -18,7 +18,7 @@ public class PostModel implements Serializable {
     private String bannerUrl;
     private String description;
     private String font;
-    private String data_at;
+    private String date_at;
 
     @OneToMany(mappedBy = "post")
     private List<CommentModel> comments;
@@ -63,12 +63,12 @@ public class PostModel implements Serializable {
         this.description = description;
     }
 
-    public String getData_at() {
-        return data_at;
+    public String getDate_at() {
+        return date_at;
     }
 
-    public void setData_at(String data_at) {
-        this.data_at = data_at;
+    public void setDate_at(String data_at) {
+        this.date_at = data_at;
     }
 
     public List<CommentModel> getComments() {
