@@ -51,4 +51,17 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(post0);
     }
 
+    @PutMapping("post/{id}")
+    public ResponseEntity<Object> editPost(@PathVariable UUID id, @RequestBody @Valid PostDto postDto) {
+        Optional<PostModel> post0 = postRepository.findById(id);
+
+        if(post0.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Noticía não encontrada");
+        }
+        var postModel = post0.get();
+        BeanUtils.copyProperties(postDto, postModel);
+
+        return ResponseEntity.status(HttpStatus.OK).body(postModel);
+    }
+
 }
