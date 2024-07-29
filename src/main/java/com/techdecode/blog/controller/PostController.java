@@ -64,4 +64,16 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postModel);
     }
 
+    @DeleteMapping("post/{id}")
+    public ResponseEntity<Object> deletePost(@PathVariable UUID id) {
+        Optional<PostModel> post0 = postRepository.findById(id);
+
+        if(post0.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Noticía não encontrada");
+        }
+
+        postRepository.delete(post0.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Noticía deletada");
+    }
+
 }
