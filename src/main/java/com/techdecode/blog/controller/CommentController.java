@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,7 +38,13 @@ public class CommentController {
         }
 
         BeanUtils.copyProperties(commentDto, commentModel);
+
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String date_at = localDate.format(formatter);
+
         commentModel.setPost(post0.get());
+        commentModel.setDate(date_at);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(commentRepository.save(commentModel));
     }
