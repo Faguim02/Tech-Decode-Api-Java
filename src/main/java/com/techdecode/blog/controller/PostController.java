@@ -22,7 +22,7 @@ public class PostController {
     @Autowired
     PostRepository postRepository;
 
-    @PostMapping("post/")
+    @PostMapping("post")
     public ResponseEntity<PostModel> createPost(@RequestBody @Valid PostDto postDto) {
         var postModel = new PostModel();
 
@@ -36,7 +36,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(postRepository.save(postModel));
     }
 
-    @GetMapping("post/")
+    @GetMapping("post")
     public ResponseEntity<List<PostModel>> findAllPosts() {
         return ResponseEntity.status(HttpStatus.OK).body(postRepository.findAll());
     }

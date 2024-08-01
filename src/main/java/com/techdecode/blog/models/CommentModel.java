@@ -1,5 +1,6 @@
 package com.techdecode.blog.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ public class CommentModel implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "post_id")
+    @JsonIgnore
     private PostModel post;
 
     public UUID getId() {
