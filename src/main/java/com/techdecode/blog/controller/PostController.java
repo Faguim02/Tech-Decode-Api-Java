@@ -1,6 +1,7 @@
 package com.techdecode.blog.controller;
 
 import com.techdecode.blog.dtos.PostDto;
+import com.techdecode.blog.dtos.PostsDto;
 import com.techdecode.blog.models.PostModel;
 import com.techdecode.blog.repository.PostRepository;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 public class PostController {
@@ -37,8 +39,14 @@ public class PostController {
     }
 
     @GetMapping("post")
-    public ResponseEntity<List<PostModel>> findAllPosts() {
-        return ResponseEntity.status(HttpStatus.OK).body(postRepository.findAll());
+    public ResponseEntity<List<PostsDto>> findAllPosts() {
+
+        List<PostModel> postModels = postRepository.findAll();
+        List<PostsDto> postsDto = postModels.stream()
+                .map(post -> new PostsDto(post.getId(), post.getTitle(), post.getBannerUrl(), post.getDate_at()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(postsDto);
     }
 
     @GetMapping("post/{id}")
