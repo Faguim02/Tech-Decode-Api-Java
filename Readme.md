@@ -64,6 +64,22 @@
 
 #
 
+### - pesquisar por notícia `get` `/post/search/{search}`
+
+#### Response `OK` `200`:
+```json
+[
+  {
+    "id": "811c3005-c88c-456c-94e4-316c1b275cdf",
+    "title": "Novidade",
+    "bannerUrl": "aass",
+    "date_at": "29/07/2024"
+  }
+]
+```
+
+#
+
 ### - criar comentarios em uma noticia `post` `/comment`
 #### Body:
 ```json

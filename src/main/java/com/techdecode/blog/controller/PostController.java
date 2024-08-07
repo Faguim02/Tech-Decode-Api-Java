@@ -84,4 +84,19 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body("Noticía deletada");
     }
 
+    @GetMapping("post/search/{search}")
+    public ResponseEntity<Object> searchPosts(@PathVariable @Valid String search) {
+        List<PostModel> postModels = postRepository.findByTitleContaining(search);
+
+        List<PostsDto> postsDto = postModels.stream()
+                .map(post -> new PostsDto(post.getId(), post.getTitle(), post.getBannerUrl(), post.getDate_at()))
+                .collect(Collectors.toList());
+
+        if(postsDto.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma notícia encontrada");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(postsDto);
+    }
+
 }
