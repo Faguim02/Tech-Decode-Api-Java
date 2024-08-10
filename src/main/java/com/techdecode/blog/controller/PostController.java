@@ -2,6 +2,7 @@ package com.techdecode.blog.controller;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.techdecode.blog.dtos.PostDto;
@@ -113,6 +114,9 @@ public class PostController {
         if(post0.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Noticía não encontrada");
         }
+
+        DeleteObjectRequest request = new DeleteObjectRequest("techdecode", post0.get().getBannerUrl().substring(36));
+        amazonS3.deleteObject(request);
 
         postRepository.delete(post0.get());
         return ResponseEntity.status(HttpStatus.OK).body("Noticía deletada");
