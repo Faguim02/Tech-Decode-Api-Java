@@ -16,6 +16,7 @@ public class PostModel implements Serializable {
     private UUID id;
     private String title;
     private String bannerUrl;
+    @Column(name = "description", length = 1000)
     private String description;
     private String font;
     private String date_at;
@@ -77,5 +78,18 @@ public class PostModel implements Serializable {
 
     public void setComments(List<CommentModel> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public String toString() {
+        return "PostModel{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", bannerUrl='" + bannerUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", font='" + font + '\'' +
+                ", date_at='" + date_at + '\'' +
+                ", comments=" + comments +
+                '}';
     }
 }
