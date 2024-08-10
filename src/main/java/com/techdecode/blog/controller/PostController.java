@@ -1,6 +1,7 @@
 package com.techdecode.blog.controller;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.techdecode.blog.dtos.PostDto;
@@ -45,7 +46,10 @@ public class PostController {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(bannerImage.getSize());
 
-            amazonS3.putObject(new PutObjectRequest("techdecode", key, bannerImage.getInputStream(), metadata));
+            PutObjectRequest request = new PutObjectRequest("techdecode", key, bannerImage.getInputStream(), metadata);
+            request.withCannedAcl(CannedAccessControlList.PublicRead);
+
+            amazonS3.putObject(request);
 
             var postModel = new PostModel();
 
