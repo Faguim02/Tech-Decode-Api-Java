@@ -29,7 +29,7 @@ public class AdminController {
     @Autowired
     private TokenService tokenService;
 
-    @PostMapping("signIn/")
+    @PostMapping("signIn")
     ResponseEntity<Object> signIn(@RequestBody @Valid RequestSignInDto adminDto) {
         AdminModel adminModel = this.adminRepository.findByEmail(adminDto.email()).orElseThrow(() -> new RuntimeException("User not found"));
         if(passwordEncoder.matches(adminDto.password(), adminModel.getPassword())) {

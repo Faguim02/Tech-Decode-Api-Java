@@ -1,5 +1,10 @@
 package com.techdecode.blog.controller;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.techdecode.blog.dtos.PostDto;
 import com.techdecode.blog.dtos.PostsDto;
 import com.techdecode.blog.models.PostModel;
@@ -10,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,19 +30,47 @@ public class PostController {
 
     @Autowired
     PostRepository postRepository;
+    @Autowired
+    private AmazonS3 amazonS3;
 
     @PostMapping("post")
-    public ResponseEntity<PostModel> createPost(@RequestBody @Valid PostDto postDto) {
-        var postModel = new PostModel();
+    public ResponseEntity<Object> createPost(
+            @RequestParam("bannerImage") @Valid MultipartFile bannerImage,
+            @RequestParam("title") @Valid String title,
+            @RequestParam("font") @Valid String font,
+            @RequestParam("description") @Valid String description
+            ) {
 
-        BeanUtils.copyProperties(postDto, postModel);
+        try {
 
-        LocalDate localDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String date_at = localDate.format(formatter);
-        postModel.setDate_at(date_at);
+            String key = UUID.randomUUID() + bannerImage.getOriginalFilename();
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(bannerImage.getSize());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(postRepository.save(postModel));
+            PutObjectRequest request = new PutObjectRequest("techdecode", key, bannerImage.getInputStream(), metadata);
+            request.withCannedAcl(CannedAccessControlList.PublicRead);
+
+            amazonS3.putObject(request);
+
+            var postModel = new PostModel();
+
+            postModel.setTitle(title);
+            postModel.setFont(font);
+            postModel.setDescription(description);
+
+            String imageUrl = "https://techdecode.s3.amazonaws.com/" + key;
+            postModel.setBannerUrl(imageUrl);
+
+            LocalDate localDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", new Locale("pt", "BR"));
+            String date_at = localDate.format(formatter);
+            postModel.setDate_at(date_at);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(postRepository.save(postModel));
+
+        } catch (Exception error) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao fazer upload da imagem");
+        }
     }
 
     @GetMapping("post")
@@ -79,6 +114,9 @@ public class PostController {
         if(post0.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Noticía não encontrada");
         }
+
+        DeleteObjectRequest request = new DeleteObjectRequest("techdecode", post0.get().getBannerUrl().substring(36));
+        amazonS3.deleteObject(request);
 
         postRepository.delete(post0.get());
         return ResponseEntity.status(HttpStatus.OK).body("Noticía deletada");
