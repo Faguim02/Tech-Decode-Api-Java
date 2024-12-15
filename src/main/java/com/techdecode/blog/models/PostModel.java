@@ -9,8 +9,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "post")
 public class PostModel implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;

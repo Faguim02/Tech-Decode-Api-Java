@@ -53,7 +53,5 @@ public class AdminController {
             return ResponseEntity.ok(new SignInResponseDto(newAdminModel.getName(), token));
         }
         return ResponseEntity.badRequest().build();
-
-        //aa
     }
 }
