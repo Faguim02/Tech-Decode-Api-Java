@@ -1,21 +1,20 @@
 package com.techdecode.blog.models;
 
+import com.techdecode.blog.models.roles.UserRole;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-@Table(name = "admin")
-public class AdminModel implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+@Table(name = "user")
+public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
     private String email;
     private String password;
+    private UserRole userRole;
 
     public UUID getId() {
         return id;
@@ -47,5 +46,13 @@ public class AdminModel implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
     }
 }
