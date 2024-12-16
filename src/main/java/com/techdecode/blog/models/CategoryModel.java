@@ -8,6 +8,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "category")
 public class CategoryModel {
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String title;
