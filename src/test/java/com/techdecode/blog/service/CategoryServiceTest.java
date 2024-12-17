@@ -2,6 +2,7 @@ package com.techdecode.blog.service;
 
 import com.techdecode.blog.dto.CategoryDto;
 import com.techdecode.blog.models.CategoryModel;
+import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -52,6 +53,18 @@ public class CategoryServiceTest {
             Assertions.assertEquals(id.toString(), categoryDtos.get(0).id().toString());
             Assertions.assertEquals("Comentario", categoryDtos.get(0).name());
             Assertions.assertNull(categoryDtos.get(0).postModels());
+
+        }
+
+        @DisplayName("should return 'Not Found Exception'")
+        @Test
+        void shouldNotFoundException() {
+            // data
+            List<CategoryModel> categoryModels = List.of();
+
+            // mock
+            Mockito.when(categoryRepository.findAll()).thenReturn(categoryModels);
+            Assertions.assertThrows(NotFoundException.class, () -> categoryService.findAllCategory());
 
         }
 
