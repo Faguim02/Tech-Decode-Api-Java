@@ -3,6 +3,7 @@ package com.techdecode.blog.service;
 import com.techdecode.blog.dto.CategoryDto;
 import com.techdecode.blog.models.CategoryModel;
 import com.techdecode.blog.models.exceptions.BadRequestException;
+import com.techdecode.blog.models.exceptions.ConflictException;
 import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -105,6 +106,23 @@ public class CategoryServiceTest {
             // result
             Assertions.assertThrows(BadRequestException.class, () -> categoryService.createCategory(categoryDto));
         }
+
+        @DisplayName("should return exception 'conflict Exception'")
+        @Test
+        void shouldReturnConflictException() {
+            // data
+            UUID uuid = UUID.randomUUID();
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setId(uuid);
+            categoryModel.setTitle("ia");
+
+            CategoryDto categoryDto = new CategoryDto(null, "ia", null);
+
+            // mock
+            Mockito.when(categoryRepository.findByTitle(Mockito.any())).thenReturn(categoryModel);
+
+            Assertions.assertThrows(ConflictException.class, () -> categoryService.createCategory(categoryDto));
+        }
     }
 
     @Nested
@@ -128,7 +146,7 @@ public class CategoryServiceTest {
 
         @DisplayName("should return exception 'not found'")
         @Test
-        void shouldReturnException() {
+        void shouldReturnNotFoundException() {
             UUID uuid = UUID.randomUUID();
 
             Mockito.when(categoryRepository.existsById(uuid)).thenReturn(false);
