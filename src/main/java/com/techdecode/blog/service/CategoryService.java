@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CategoryService {
@@ -42,5 +43,14 @@ public class CategoryService {
 
         CategoryModel categoryResponse = this.categoryRepository.save(categoryModel);
         return new CategoryDto(categoryResponse.getId(), categoryResponse.getTitle(), null);
+    }
+
+    public String deleteCategory(UUID id) {
+        if (!this.categoryRepository.existsById(id)) {
+            throw new NotFoundException("categoria inexistente");
+        }
+
+        this.categoryRepository.deleteById(id);
+        return "Categoria deletada com sucesso";
     }
 }
