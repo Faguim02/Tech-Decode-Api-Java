@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface PostRepository extends JpaRepository<PostModel, UUID> {
     public List<PostModel> findByTitleContaining(String keyword);
+    public PostModel findByTitle(String title);
 }
