@@ -3,6 +3,7 @@ package com.techdecode.blog.service;
 import com.techdecode.blog.dto.CategoryDto;
 import com.techdecode.blog.models.CategoryModel;
 import com.techdecode.blog.models.exceptions.BadRequestException;
+import com.techdecode.blog.models.exceptions.ConflictException;
 import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.CategoryRepository;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +37,10 @@ public class CategoryService {
 
         if (categoryDto.name().isEmpty()) {
             throw new BadRequestException("nome da categoria não informado");
+        }
+
+        if (categoryRepository.findByTitle(categoryDto.name()) != null) {
+            throw new ConflictException("essa categoria já existe");
         }
 
         CategoryModel categoryModel = new CategoryModel();
