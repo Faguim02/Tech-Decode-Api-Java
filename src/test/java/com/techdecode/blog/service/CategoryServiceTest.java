@@ -69,4 +69,33 @@ public class CategoryServiceTest {
         }
 
     }
+
+    @Nested
+    @DisplayName("method test: createCategory")
+    class CreateCategory {
+        @DisplayName("should created category")
+        @Test
+        void shouldCreatedCategory() {
+            // data
+            UUID id = UUID.randomUUID();
+            CategoryDto categoryDto = new CategoryDto(null, "ia", null);
+
+            CategoryModel categoryRequest = new CategoryModel();
+            categoryRequest.setTitle("ia");
+
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setTitle("ia");
+            categoryModel.setId(id);
+
+            // mock
+            Mockito.when(categoryRepository.save(Mockito.any(CategoryModel.class))).thenReturn(categoryModel);
+            CategoryDto categoryRes = categoryService.createCategory(categoryDto);
+
+            // result
+            Assertions.assertNotNull(categoryRes);
+            Assertions.assertEquals(id, categoryRes.id());
+            Assertions.assertEquals("ia", categoryRes.name());
+            Assertions.assertNull(categoryRes.postModels());
+        }
+    }
 }
