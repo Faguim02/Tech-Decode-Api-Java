@@ -99,11 +99,34 @@ public class CategoryServiceTest {
         @DisplayName("should return exception 'bad request'")
         @Test
         void shouldReturnException() {
-            //data
+            // data
             CategoryDto categoryDto = new CategoryDto(null, "", null);
 
-            //mock
+            // result
             Assertions.assertThrows(BadRequestException.class, () -> categoryService.createCategory(categoryDto));
         }
+    }
+
+    @Nested
+    @DisplayName("method test: deleteCategory")
+    class DeleteCategory {
+
+        @DisplayName("should delete category")
+        @Test
+        void shouldDeleteCategory() {
+            // data
+            UUID uuid = UUID.randomUUID();
+
+            // mock
+            Mockito.when(categoryRepository.existsById(uuid)).thenReturn(true);
+            String deleted = categoryService.deleteCategory(uuid);
+
+            // result
+            Assertions.assertEquals(deleted, "Categoria deletada com sucesso");
+
+        }
+
+
+
     }
 }
