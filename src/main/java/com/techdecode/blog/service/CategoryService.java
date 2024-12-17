@@ -2,6 +2,7 @@ package com.techdecode.blog.service;
 
 import com.techdecode.blog.dto.CategoryDto;
 import com.techdecode.blog.models.CategoryModel;
+import com.techdecode.blog.models.exceptions.BadRequestException;
 import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.CategoryRepository;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +32,10 @@ public class CategoryService {
     }
 
     public CategoryDto createCategory(CategoryDto categoryDto) {
+
+        if (categoryDto.name().isEmpty()) {
+            throw new BadRequestException("nome da categoria não informado");
+        }
 
         CategoryModel categoryModel = new CategoryModel();
         BeanUtils.copyProperties(categoryDto, categoryModel);
