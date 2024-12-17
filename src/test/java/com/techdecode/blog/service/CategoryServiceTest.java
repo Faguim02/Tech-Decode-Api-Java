@@ -2,6 +2,7 @@ package com.techdecode.blog.service;
 
 import com.techdecode.blog.dto.CategoryDto;
 import com.techdecode.blog.models.CategoryModel;
+import com.techdecode.blog.models.exceptions.BadRequestException;
 import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.CategoryRepository;
 import org.junit.jupiter.api.Assertions;
@@ -80,9 +81,6 @@ public class CategoryServiceTest {
             UUID id = UUID.randomUUID();
             CategoryDto categoryDto = new CategoryDto(null, "ia", null);
 
-            CategoryModel categoryRequest = new CategoryModel();
-            categoryRequest.setTitle("ia");
-
             CategoryModel categoryModel = new CategoryModel();
             categoryModel.setTitle("ia");
             categoryModel.setId(id);
@@ -96,6 +94,16 @@ public class CategoryServiceTest {
             Assertions.assertEquals(id, categoryRes.id());
             Assertions.assertEquals("ia", categoryRes.name());
             Assertions.assertNull(categoryRes.postModels());
+        }
+
+        @DisplayName("should return exception 'bad request'")
+        @Test
+        void shouldReturnException() {
+            //data
+            CategoryDto categoryDto = new CategoryDto(null, "", null);
+
+            //mock
+            Assertions.assertThrows(BadRequestException.class, () -> categoryService.createCategory(categoryDto));
         }
     }
 }
