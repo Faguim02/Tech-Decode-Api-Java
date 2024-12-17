@@ -126,7 +126,15 @@ public class CategoryServiceTest {
 
         }
 
+        @DisplayName("should return exception 'not found'")
+        @Test
+        void shouldReturnException() {
+            UUID uuid = UUID.randomUUID();
 
+            Mockito.when(categoryRepository.existsById(uuid)).thenReturn(false);
+
+            Assertions.assertThrows(NotFoundException.class, () -> categoryService.deleteCategory(uuid));
+        }
 
     }
 }
