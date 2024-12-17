@@ -4,6 +4,7 @@ import com.techdecode.blog.dto.CategoryDto;
 import com.techdecode.blog.models.CategoryModel;
 import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.CategoryRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +28,14 @@ public class CategoryService {
         }
 
         return categoryDtos;
+    }
+
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+
+        CategoryModel categoryModel = new CategoryModel();
+        BeanUtils.copyProperties(categoryDto, categoryModel);
+
+        CategoryModel categoryResponse = this.categoryRepository.save(categoryModel);
+        return new CategoryDto(categoryResponse.getId(), categoryResponse.getTitle(), null);
     }
 }
