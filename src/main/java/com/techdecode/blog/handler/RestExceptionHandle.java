@@ -2,6 +2,7 @@ package com.techdecode.blog.handler;
 
 import com.techdecode.blog.models.error.ErrorMessage;
 import com.techdecode.blog.models.exceptions.BadRequestException;
+import com.techdecode.blog.models.exceptions.ConflictException;
 import com.techdecode.blog.models.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,11 @@ public class RestExceptionHandle {
     public ResponseEntity<ErrorMessage> badRequestException(BadRequestException exception) {
         ErrorMessage errorMessage = new ErrorMessage("bad request", exception.getMessage(), HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorMessage> conflictException(ConflictException exception) {
+        ErrorMessage errorMessage = new ErrorMessage("conflict", exception.getMessage(), HttpStatus.CONFLICT.value());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
     }
 }
