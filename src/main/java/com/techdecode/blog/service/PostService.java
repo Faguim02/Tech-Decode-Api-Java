@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PostService {
@@ -41,5 +43,19 @@ public class PostService {
         return postModels.stream()
                 .map(postModel -> new PostDto(postModel.getId(), postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), null, null))
                 .toList();
+    }
+
+    public PostDto findPostById(UUID id) {
+        Optional<PostModel> postModelOptional = this.postRepository.findById(id);
+
+        if (postModelOptional.isEmpty()) {
+            throw new NotFoundException("está postagem não existe mais");
+        }
+
+        PostModel postModel = postModelOptional.get();
+
+        return new PostDto(
+                postModel.getId(), postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), postModel.getComments(), postModel.getCategory()
+        );
     }
 }

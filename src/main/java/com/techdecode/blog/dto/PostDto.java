@@ -1,5 +1,8 @@
 package com.techdecode.blog.dto;
 
+import com.techdecode.blog.models.CategoryModel;
+import com.techdecode.blog.models.CommentModel;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -10,8 +13,8 @@ public record PostDto(
         String description,
         String font,
         String data_at,
-        List<Object> comments,
-        CategoryDto category
+        List<CommentModel> comments,
+        CategoryModel category
 ) {
 
 }
