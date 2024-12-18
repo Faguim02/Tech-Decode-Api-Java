@@ -195,6 +195,28 @@ public class PostServiceTest {
     @Nested
     @DisplayName("test method: updatePost")
     class UpdatePost{
+        @DisplayName("should update and return post")
+        @Test
+        void shouldUpdateAndReturnPost() {
+            // data
+            UUID id = UUID.randomUUID();
+            PostModel postModel= new PostModel();
+            postModel.setId(id);
+            postModel.setTitle("postagem");
+            postModel.setBannerUrl("link");
+            postModel.setDescription("aaa aaa");
+
+            PostDto postDto = new PostDto(id, postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), null, null);
+
+            // mock
+            Mockito.when(postRepository.save(Mockito.any(PostModel.class))).thenReturn(postModel);
+            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(true);
+
+            PostDto postDtoRes = postService.updatePost(id, postDto);
+
+            Assertions.assertNotNull(postDtoRes);
+
+        }
 
     }
 

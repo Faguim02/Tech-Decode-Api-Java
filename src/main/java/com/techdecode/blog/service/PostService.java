@@ -64,7 +64,6 @@ public class PostService {
         );
     }
 
-    // todo dependency: create test
     public CategoryDto findPostByCategory(UUID id) {
         Optional<CategoryModel> categoryModelOptional = this.categoryRepository.findById(id);
 
