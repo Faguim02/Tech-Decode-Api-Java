@@ -218,6 +218,26 @@ public class PostServiceTest {
 
         }
 
+        @DisplayName("should return conflict exception")
+        @Test
+        void shouldReturnConflictException() {
+            // data
+            UUID id = UUID.randomUUID();
+            PostModel postModel= new PostModel();
+            postModel.setId(id);
+            postModel.setTitle("postagem");
+            postModel.setBannerUrl("link");
+            postModel.setDescription("aaa aaa");
+
+            PostDto postDto = new PostDto(id, postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), null, null);
+
+            // mock
+            Mockito.when(postRepository.findByTitle(Mockito.any(String.class))).thenReturn(postModel);
+            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(true);
+
+            Assertions.assertThrows(ConflictException.class, () -> postService.updatePost(id, postDto));
+        }
+
     }
 
     @Nested
