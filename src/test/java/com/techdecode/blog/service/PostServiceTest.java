@@ -238,6 +238,25 @@ public class PostServiceTest {
             Assertions.assertThrows(ConflictException.class, () -> postService.updatePost(id, postDto));
         }
 
+        @DisplayName("should return not found exception")
+        @Test
+        void shouldReturnNotFoundException() {
+            // data
+            UUID id = UUID.randomUUID();
+            PostModel postModel= new PostModel();
+            postModel.setId(id);
+            postModel.setTitle("postagem");
+            postModel.setBannerUrl("link");
+            postModel.setDescription("aaa aaa");
+
+            PostDto postDto = new PostDto(id, postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), null, null);
+
+            // mock
+            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(false);
+
+            Assertions.assertThrows(NotFoundException.class, () -> postService.updatePost(id, postDto));
+        }
+
     }
 
     @Nested
