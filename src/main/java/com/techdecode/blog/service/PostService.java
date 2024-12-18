@@ -1,9 +1,12 @@
 package com.techdecode.blog.service;
 
+import com.techdecode.blog.dto.CategoryDto;
 import com.techdecode.blog.dto.PostDto;
+import com.techdecode.blog.models.CategoryModel;
 import com.techdecode.blog.models.PostModel;
 import com.techdecode.blog.models.exceptions.ConflictException;
 import com.techdecode.blog.models.exceptions.NotFoundException;
+import com.techdecode.blog.repository.CategoryRepository;
 import com.techdecode.blog.repository.PostRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ public class PostService {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public PostDto createPost(PostDto postDto) {
 
@@ -57,5 +62,18 @@ public class PostService {
         return new PostDto(
                 postModel.getId(), postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), postModel.getComments(), postModel.getCategory()
         );
+    }
+
+    // todo dependency: create test
+    public CategoryDto findPostByCategory(UUID id) {
+        Optional<CategoryModel> categoryModelOptional = this.categoryRepository.findById(id);
+
+        if (categoryModelOptional.isEmpty()) {
+            throw new NotFoundException("nenhuma postagem associada a esta categoria");
+        }
+
+        CategoryModel categoryModel = categoryModelOptional.get();
+
+        return new CategoryDto(categoryModel.getId(), categoryModel.getTitle(), categoryModel.getPostModels());
     }
 }
