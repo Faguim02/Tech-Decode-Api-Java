@@ -76,13 +76,18 @@ public class PostService {
         return new CategoryDto(categoryModel.getId(), categoryModel.getTitle(), categoryModel.getPostModels());
     }
 
-    // todo dependency: create test
+    public List<PostDto> searchPost(String search) {
+        List<PostModel> postModels = this.postRepository.findByTitleContaining(search);
+        return postModels.stream()
+                .map(postModel -> new PostDto(postModel.getId(), postModel.getTitle(), postModel.getBannerUrl(), null, null, postModel.getDate_at(), null, null))
+                .toList();
+    }
+
     public PostDto updatePost(UUID id, PostDto postDto) {
         this.deletePost(id);
         return this.createPost(postDto);
     }
 
-    // todo dependency: create test
     public String deletePost(UUID id) {
 
         if (!this.postRepository.existsById(id)) {
