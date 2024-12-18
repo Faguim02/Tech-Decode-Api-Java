@@ -151,4 +151,21 @@ public class PostServiceTest {
 
     }
 
+    @Nested
+    @DisplayName("test method: findPostByCategory")
+    class FindByCategory{
+
+    }
+
+    @Nested
+    @DisplayName("test method: updatePost")
+    class UpdatePost{
+
+    }
+
+    @Nested
+    @DisplayName("test method: deletePost")
+    class DeletePost{
+
+    }
 }
