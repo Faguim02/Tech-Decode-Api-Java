@@ -1,9 +1,12 @@
 package com.techdecode.blog.service;
 
+import com.techdecode.blog.dto.CategoryDto;
 import com.techdecode.blog.dto.PostDto;
+import com.techdecode.blog.models.CategoryModel;
 import com.techdecode.blog.models.PostModel;
 import com.techdecode.blog.models.exceptions.ConflictException;
 import com.techdecode.blog.models.exceptions.NotFoundException;
+import com.techdecode.blog.repository.CategoryRepository;
 import com.techdecode.blog.repository.PostRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +31,8 @@ public class PostServiceTest {
     private PostService postService;
     @Mock
     private PostRepository postRepository;
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @Nested
     @DisplayName("test method: createPost")
@@ -154,7 +159,29 @@ public class PostServiceTest {
     @Nested
     @DisplayName("test method: findPostByCategory")
     class FindByCategory{
+        @DisplayName("should return posts for category")
+        @Test
+        void shouldReturnPostByCategory() {
+            // data
+            PostModel postModel= new PostModel();
+            postModel.setId(UUID.randomUUID());
+            postModel.setTitle("postagem");
+            postModel.setBannerUrl("link");
+            postModel.setDescription("aaa aaa");
 
+            UUID id = UUID.randomUUID();
+            CategoryModel categoryModel = new CategoryModel();
+            categoryModel.setId(id);
+            categoryModel.setTitle("ia");
+            categoryModel.setPostModels(List.of(postModel));
+
+            // mock
+            Mockito.when(categoryRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(categoryModel));
+            CategoryDto categoryDto = postService.findPostByCategory(id);
+
+            // result
+            Assertions.assertEquals(1, categoryDto.postModels().size());
+        }
     }
 
     @Nested
