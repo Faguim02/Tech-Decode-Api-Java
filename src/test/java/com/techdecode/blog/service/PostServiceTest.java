@@ -3,6 +3,7 @@ package com.techdecode.blog.service;
 import com.techdecode.blog.dto.PostDto;
 import com.techdecode.blog.models.PostModel;
 import com.techdecode.blog.models.exceptions.ConflictException;
+import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.PostRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.UUID;
 
 @DisplayName("test: post service")
@@ -27,7 +29,7 @@ public class PostServiceTest {
     private PostRepository postRepository;
 
     @Nested
-    @DisplayName("test method: create post")
+    @DisplayName("test method: createPost")
     class CreatePost {
 
         @DisplayName("should create post and return data")
@@ -62,6 +64,49 @@ public class PostServiceTest {
 
             Assertions.assertThrows(ConflictException.class, () -> postService.createPost(postDto));
 
+        }
+
+    }
+
+    @Nested
+    @DisplayName("test method: findAllPosts")
+    class FindAllPost {
+
+        @DisplayName("should return all posts")
+        @Test
+        void shouldReturnAllPosts() {
+
+            // data
+            UUID id = UUID.randomUUID();
+            PostModel postModel= new PostModel();
+            postModel.setId(id);
+            postModel.setTitle("postagem");
+            postModel.setBannerUrl("link");
+            postModel.setDescription("aaa aaa");
+
+            List<PostModel> postModels = List.of(postModel);
+
+            // mock
+            Mockito.when(postRepository.findAll()).thenReturn(postModels);
+
+            List<PostDto> postDtos = postService.findAllPost();
+
+            Assertions.assertNotNull(postDtos);
+            Assertions.assertEquals(1, postDtos.size());
+            Assertions.assertEquals("postagem", postDtos.get(0).title());
+        }
+
+        @DisplayName("should return not found exception")
+        @Test
+        void shouldReturnNotFoundException() {
+
+            // data
+            List<PostModel> postModels = List.of();
+
+            // mock
+            Mockito.when(postRepository.findAll()).thenReturn(postModels);
+
+            Assertions.assertThrows(NotFoundException.class, () -> postService.findAllPost());
         }
 
     }
