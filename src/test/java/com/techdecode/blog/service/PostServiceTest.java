@@ -182,6 +182,14 @@ public class PostServiceTest {
             // result
             Assertions.assertEquals(1, categoryDto.postModels().size());
         }
+
+        @DisplayName("should return not found exception")
+        @Test
+        void shouldReturnNotFoundException() {
+            Mockito.when(categoryRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
+
+            Assertions.assertThrows(NotFoundException.class, () -> postService.findPostByCategory(UUID.randomUUID()));
+        }
     }
 
     @Nested
