@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @DisplayName("test: post service")
@@ -107,6 +108,45 @@ public class PostServiceTest {
             Mockito.when(postRepository.findAll()).thenReturn(postModels);
 
             Assertions.assertThrows(NotFoundException.class, () -> postService.findAllPost());
+        }
+
+    }
+
+    @Nested
+    @DisplayName("test method: findPostById")
+    class FindPostById {
+
+        @DisplayName("should return post")
+        @Test
+        void shouldReturnPost() {
+            // data
+            UUID id = UUID.randomUUID();
+            PostModel postModel= new PostModel();
+            postModel.setId(id);
+            postModel.setTitle("postagem");
+            postModel.setBannerUrl("link");
+            postModel.setDescription("aaa aaa");
+
+            // mock
+            Mockito.when(postRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(postModel));
+
+            PostDto postDto = postService.findPostById(id);
+
+            // result
+            Assertions.assertNotNull(postDto);
+            Assertions.assertEquals("postagem", postDto.title());
+        }
+
+        @DisplayName("should return not found exception")
+        @Test
+        void shoulReturnNotFoundException() {
+            // data
+            UUID id = UUID.randomUUID();
+
+            // mock
+            Mockito.when(postRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
+
+            Assertions.assertThrows(NotFoundException.class, () -> postService.findPostById(id));
         }
 
     }
