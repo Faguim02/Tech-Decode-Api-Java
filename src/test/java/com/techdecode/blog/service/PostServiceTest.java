@@ -262,6 +262,24 @@ public class PostServiceTest {
     @Nested
     @DisplayName("test method: deletePost")
     class DeletePost{
+        @DisplayName("should return message 'Postagem deletada'")
+        @Test
+        void shouldReturnMessage() {
 
+            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(true);
+
+            String postDeleted = postService.deletePost(UUID.randomUUID());
+
+            Assertions.assertEquals("Postagem deletada", postDeleted);
+        }
+
+        @DisplayName("should return not found exception")
+        @Test
+        void shouldReturnNotFoundException() {
+
+            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(false);
+
+            Assertions.assertThrows(NotFoundException.class, () -> postService.deletePost(UUID.randomUUID()));
+        }
     }
 }
