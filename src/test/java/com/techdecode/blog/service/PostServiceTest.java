@@ -281,4 +281,30 @@ public class PostServiceTest {
             Assertions.assertThrows(NotFoundException.class, () -> postService.deletePost(UUID.randomUUID()));
         }
     }
+
+    @Nested
+    @DisplayName("test method: searchPost")
+    class SearchPost {
+
+        @DisplayName("should return posts")
+        @Test
+        void shouldReturnPost() {
+            // data
+            UUID id = UUID.randomUUID();
+            PostModel postModel= new PostModel();
+            postModel.setId(id);
+            postModel.setTitle("postagem");
+            postModel.setBannerUrl("link");
+            postModel.setDescription("aaa aaa");
+
+            List<PostModel> postModels = List.of(postModel);
+
+            // mock
+            Mockito.when(postRepository.findByTitleContaining(Mockito.any(String.class))).thenReturn(postModels);
+
+            List<PostDto> postDtos = postService.searchPost("postagem");
+            // result
+            Assertions.assertEquals(1, postDtos.size());
+        }
+    }
 }
