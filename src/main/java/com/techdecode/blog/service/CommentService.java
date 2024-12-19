@@ -5,6 +5,7 @@ import com.techdecode.blog.models.CommentModel;
 import com.techdecode.blog.models.PostModel;
 import com.techdecode.blog.models.UserModel;
 import com.techdecode.blog.models.exceptions.ForbiddenException;
+import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.CommentRepository;
 import com.techdecode.blog.repository.PostRepository;
 import com.techdecode.blog.repository.UserRepository;
@@ -46,6 +47,11 @@ public class CommentService {
 
     String deleteComment(UUID user_id, UUID comment_id) {
         Optional<CommentModel> commentModelOptional = this.commentRepository.findById(comment_id);
+
+        if (commentModelOptional.isEmpty()) {
+            throw new NotFoundException("comentario inexistente");
+        }
+
         CommentModel commentModel = commentModelOptional.get();
 
         if (!(commentModel.getUser().getId() == user_id)) {
