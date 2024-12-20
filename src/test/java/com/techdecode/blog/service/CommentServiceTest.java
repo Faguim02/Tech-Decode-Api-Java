@@ -80,5 +80,25 @@ public class CommentServiceTest {
 
     @Nested
     @DisplayName("test method: deleteComment")
-    class DeleteComment {}
+    class DeleteComment {
+        @DisplayName("should return message 'comentario deletado'")
+        @Test
+        void shouldReturnMessage() {
+            UUID user_id = UUID.randomUUID();
+            UUID comment_id = UUID.randomUUID();
+
+            CommentModel commentModel = new CommentModel();
+            UserModel userModel = new UserModel();
+            userModel.setId(user_id);
+            commentModel.setUser(userModel);
+
+            Mockito.when(commentRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(commentModel));
+
+            String message = commentService.deleteComment(user_id, comment_id);
+
+            Assertions.assertEquals("comentario deletado", message);
+
+
+        }
+    }
 }
