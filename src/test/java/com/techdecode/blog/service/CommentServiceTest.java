@@ -106,11 +106,6 @@ public class CommentServiceTest {
             UUID user_id = UUID.randomUUID();
             UUID comment_id = UUID.randomUUID();
 
-            CommentModel commentModel = new CommentModel();
-            UserModel userModel = new UserModel();
-            userModel.setId(user_id);
-            commentModel.setUser(userModel);
-
             Mockito.when(commentRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
 
             Assertions.assertThrows(NotFoundException.class, () -> commentService.deleteComment(user_id, comment_id));
