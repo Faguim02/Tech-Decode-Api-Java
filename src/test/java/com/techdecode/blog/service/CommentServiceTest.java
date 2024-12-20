@@ -5,6 +5,7 @@ import com.techdecode.blog.models.CommentModel;
 import com.techdecode.blog.models.PostModel;
 import com.techdecode.blog.models.UserModel;
 import com.techdecode.blog.models.exceptions.ForbiddenException;
+import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.CommentRepository;
 import com.techdecode.blog.repository.PostRepository;
 import com.techdecode.blog.repository.UserRepository;
@@ -97,8 +98,22 @@ public class CommentServiceTest {
             String message = commentService.deleteComment(user_id, comment_id);
 
             Assertions.assertEquals("comentario deletado", message);
+        }
 
+        @DisplayName("should return not found exception")
+        @Test
+        void shouldReturnNotFoundException() {
+            UUID user_id = UUID.randomUUID();
+            UUID comment_id = UUID.randomUUID();
 
+            CommentModel commentModel = new CommentModel();
+            UserModel userModel = new UserModel();
+            userModel.setId(user_id);
+            commentModel.setUser(userModel);
+
+            Mockito.when(commentRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
+
+            Assertions.assertThrows(NotFoundException.class, () -> commentService.deleteComment(user_id, comment_id));
         }
     }
 }
