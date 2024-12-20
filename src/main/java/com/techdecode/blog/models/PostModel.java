@@ -1,5 +1,6 @@
 package com.techdecode.blog.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -9,8 +10,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "post")
 public class PostModel implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -23,6 +22,11 @@ public class PostModel implements Serializable {
 
     @OneToMany(mappedBy = "post")
     private List<CommentModel> comments;
+
+    @ManyToOne()
+    @JoinColumn(name = "category_id")
+    @JsonIgnore
+    private CategoryModel category;
 
     public UUID getId() {
         return id;
@@ -80,6 +84,14 @@ public class PostModel implements Serializable {
         this.comments = comments;
     }
 
+    public CategoryModel getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryModel category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "PostModel{" +
@@ -90,6 +102,7 @@ public class PostModel implements Serializable {
                 ", font='" + font + '\'' +
                 ", date_at='" + date_at + '\'' +
                 ", comments=" + comments +
+                ", category=" + category +
                 '}';
     }
 }

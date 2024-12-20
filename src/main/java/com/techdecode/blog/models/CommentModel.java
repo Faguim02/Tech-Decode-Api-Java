@@ -3,21 +3,21 @@ package com.techdecode.blog.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
 @Table(name = "comment")
-public class CommentModel implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public class CommentModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private String name;
     private String comment;
-    private String date;
+    private String date_at;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private UserModel user;
     @ManyToOne
     @JoinColumn(name = "post_id")
     @JsonIgnore
@@ -31,14 +31,6 @@ public class CommentModel implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -47,12 +39,20 @@ public class CommentModel implements Serializable {
         this.comment = comment;
     }
 
-    public String getDate() {
-        return date;
+    public String getDate_at() {
+        return date_at;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDate_at(String date_at) {
+        this.date_at = date_at;
+    }
+
+    public UserModel getUser() {
+        return user;
+    }
+
+    public void setUser(UserModel user) {
+        this.user = user;
     }
 
     public PostModel getPost() {
