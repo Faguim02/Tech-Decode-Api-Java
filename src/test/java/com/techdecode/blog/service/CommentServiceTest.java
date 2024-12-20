@@ -110,5 +110,21 @@ public class CommentServiceTest {
 
             Assertions.assertThrows(NotFoundException.class, () -> commentService.deleteComment(user_id, comment_id));
         }
+
+        @DisplayName("should return forbidden exception")
+        @Test
+        void shouldReturnForbiddenException() {
+            UUID user_id = UUID.randomUUID();
+            UUID comment_id = UUID.randomUUID();
+
+            CommentModel commentModel = new CommentModel();
+            UserModel userModel = new UserModel();
+            userModel.setId(UUID.randomUUID());
+            commentModel.setUser(userModel);
+
+            Mockito.when(commentRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(commentModel));
+
+            Assertions.assertThrows(ForbiddenException.class, () -> commentService.deleteComment(user_id, comment_id));
+        }
     }
 }
