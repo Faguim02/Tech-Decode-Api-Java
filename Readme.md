@@ -2,99 +2,50 @@
 <div align="center">
     <img src="assets/logo.png" alt="logo"/>
 </div>
+<div align="center">
+  <p>
+    <strong>Saiba para onde o seu dinheiro está correndo</strong>
+  </p>
+</div>
 
-<h3 align="justify">
-    TechDecode é uma API RestFull web gratuita para obter informações de noticías referente a tecnologias do site TechDecode.
-</h3> 
+![GitHub repo size](https://img.shields.io/github/repo-size/faguim02/Tech-Decode-Api-Java?style=for-the-badge)
 
-## Uso
+## Objetivo
+TechDecode API é uma api rest que disponibiliza, para consumo, noticias sobre tecnologia.
 
-### base de url: `http://localhost:8080` (local por enquanto)
-
-## Endpoints
-    
-### - acessar todas as noticias `GET` `/post`
-#### Response `OK` `200`:
-```json
-[
-    {
-        "id": "807f6d10-0530-454c-8aa0-b0d5cafc15c7",
-        "title": "New ias",
-        "bannerUrl": "aa",
-        "date_at": "12/12/2001"
-    },
-    {
-        "id": "811c3005-c88c-456c-94e4-316c1b275cdf",
-        "title": "Novidade",
-        "bannerUrl": "aass",
-        "date_at": "29/07/2024"
-    }
-]
+## Modo de uso
+```shell
+git clone https://github.com/Faguim02/Tech-Decode-Api-Java
 ```
-
-#
-
-### - acessar detalhes de uma unica noticías `get` `/post/{id}` 
-
-#### Response `OK` `200`:
-```json
-{
-  "id": "807f6d10-0530-454c-8aa0-b0d5cafc15c7",
-  "title": "New ias",
-  "bannerUrl": "aa",
-  "description": "aaaa",
-  "font": "eu",
-  "date_at": "12/12/2001",
-  "comments": [
-    {
-      "id": "fc8ba455-eb99-4334-8392-c49a829067ca",
-      "name": "Fagner",
-      "comment": "oi",
-      "date": "00/00/0000"
-    },
-    {
-      "id": "75d8245d-8756-4bd7-9597-0bace9716d08",
-      "name": "Fagner",
-      "comment": "oi",
-      "date": "00/00/0000"
-    }
-  ]
-}
+No diretorio do projeto:
+```shell
+mvn clean package
+mvn install
+java -jar target/*.jar
 ```
+acesse no navegador para sober como usar as rotas:\
+`http://localhost:8080/swagger-ui.html`
+\
+ou acesse: \
+[Click aqui para seguir os passos](./UseApi.md).
 
-#
+## Como posso contribuir com o projeto
+O projeto é livre para que qualquer tipo de contribuição seja bem vinda.
+Caso tenho vontande em contribuir com o projeto
+[Click aqui para seguir os passos](./Contribuir.md).
 
-### - pesquisar por notícia `get` `/post/search/{search}`
 
-#### Response `OK` `200`:
-```json
-[
-  {
-    "id": "811c3005-c88c-456c-94e4-316c1b275cdf",
-    "title": "Novidade",
-    "bannerUrl": "aass",
-    "date_at": "29/07/2024"
-  }
-]
-```
 
-#
 
-### - criar comentarios em uma noticia `post` `/comment`
-#### Body:
-```json
-{
-  "name": "seu nome",
-  "comment": "comentario",
-  "post_id": "807f6d10-0530-454c-8aa0-b0d5cafc15c7"
-}
-```
-#### Response `OK` `200`:
-```json
-{
-    "id": "75d8245d-8756-4bd7-9597-0bace9716d08",
-    "name": "seu nome",
-    "comment": "comentario",
-    "date": "00/00/0000"
-}
-```
+
+## Tecnologias utilizadas
+- Java 17
+- Postgresql 17
+- SpringBoot
+- - Data JPA
+- - Web
+- - Security
+- - Auth 2.0 + jwt
+- JUnit
+- Mockito
+- Aws S3
