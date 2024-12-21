@@ -1,6 +1,7 @@
 package com.techdecode.blog.service;
 
 import com.techdecode.blog.dto.EmailDto;
+import com.techdecode.blog.dto.InfoNewLoginDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,31 @@ public class EmailService {
                 Abraços,
                 Fagner Muniz de Sá
                 Fundador do TechDecode""", name);
+
+        EmailDto emailDto = new EmailDto(id,emailTo, subject, text);
+        this.sendToEmail(emailDto);
+    }
+
+    public void sendInfoNewLoginDetected(UUID id, String emailTo, String name, InfoNewLoginDto newLoginDto) {
+        String subject = "Novo Login Detectado no TechDecode \uD83D\uDCBB";
+        String text = String.format("""
+                Olá %s,
+                
+                Detectamos um novo login na sua conta do TechDecode. Aqui estão os detalhes:
+                
+                Data e Hora: %s
+                Dispositivo: %s
+                Localização Aproximada: %s
+                Se este login foi feito por você, não é necessário tomar nenhuma ação. Caso contrário, recomendamos que você:
+                
+                Altere sua senha imediatamente.
+                Verifique suas configurações de segurança no painel do TechDecode.
+                \uD83C\uDF10 Acesse sua conta: [Link para o painel de login]
+                
+                Estamos aqui para ajudar! Se tiver qualquer dúvida ou preocupação, entre em contato este email.
+                
+                Obrigado por fazer parte do TechDecode!
+                Equipe TechDecode \uD83D\uDE80""", name, newLoginDto.date(), newLoginDto.dispositive(), newLoginDto.location());
 
         EmailDto emailDto = new EmailDto(id,emailTo, subject, text);
         this.sendToEmail(emailDto);
