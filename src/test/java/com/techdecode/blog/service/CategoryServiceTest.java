@@ -53,7 +53,7 @@ public class CategoryServiceTest {
             //result
             Assertions.assertEquals(1, categoryDtos.size());
             Assertions.assertEquals(id.toString(), categoryDtos.get(0).id().toString());
-            Assertions.assertEquals("Comentario", categoryDtos.get(0).name());
+            Assertions.assertEquals("Comentario", categoryDtos.get(0).title());
             Assertions.assertNull(categoryDtos.get(0).postModels());
 
         }
@@ -93,7 +93,7 @@ public class CategoryServiceTest {
             // result
             Assertions.assertNotNull(categoryRes);
             Assertions.assertEquals(id, categoryRes.id());
-            Assertions.assertEquals("ia", categoryRes.name());
+            Assertions.assertEquals("ia", categoryRes.title());
             Assertions.assertNull(categoryRes.postModels());
         }
 

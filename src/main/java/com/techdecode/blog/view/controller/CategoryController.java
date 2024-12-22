@@ -22,7 +22,7 @@ public class CategoryController {
         List<CategoryDto> categoryDtos = this.categoryService.findAllCategory();
 
         List<CategorysResponse> categoryResponses = categoryDtos.stream()
-                .map(categoryDto -> new CategorysResponse(categoryDto.id(), categoryDto.name()))
+                .map(categoryDto -> new CategorysResponse(categoryDto.id(), categoryDto.title()))
                 .toList();
 
         return ResponseEntity.status(HttpStatus.OK).body(categoryResponses);
@@ -30,11 +30,13 @@ public class CategoryController {
 
     @PostMapping
     ResponseEntity<CategorysResponse> createCategory(@RequestBody CategoryRequest categoryRequest) {
-        CategoryDto categoryDto = new CategoryDto(null, categoryRequest.name(), null);
+        CategoryDto categoryDto = new CategoryDto(null, categoryRequest.title(), null);
         CategoryDto categoryDtoRes = this.categoryService.createCategory(categoryDto);
 
-        CategorysResponse categorysResponse = new CategorysResponse(categoryDtoRes.id(), categoryDtoRes.name());
+        CategorysResponse categorysResponse = new CategorysResponse(categoryDtoRes.id(), categoryDtoRes.title());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(categorysResponse);
     }
+
+
 }

@@ -35,11 +35,11 @@ public class CategoryService {
 
     public CategoryDto createCategory(CategoryDto categoryDto) {
 
-        if (categoryDto.name().isEmpty()) {
+        if (categoryDto.title().isEmpty()) {
             throw new BadRequestException("nome da categoria não informado");
         }
 
-        if (categoryRepository.findByTitle(categoryDto.name()) != null) {
+        if (categoryRepository.findByTitle(categoryDto.title()) != null) {
             throw new ConflictException("essa categoria já existe");
         }
 
