@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("category")
@@ -38,5 +39,10 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(categorysResponse);
     }
 
+    @DeleteMapping("{id}")
+    ResponseEntity<String> deleteCategory(@PathVariable("id") UUID id) {
+        String messageDeleted = this.categoryService.deleteCategory(id);
+        return ResponseEntity.status(HttpStatus.OK).body(messageDeleted);
+    }
 
 }
