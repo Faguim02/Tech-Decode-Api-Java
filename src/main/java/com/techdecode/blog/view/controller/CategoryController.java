@@ -18,5 +18,14 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @GetMapping
+    ResponseEntity<List<CategorysResponse>> findAllCategory() {
+        List<CategoryDto> categoryDtos = this.categoryService.findAllCategory();
 
+        List<CategorysResponse> categoryResponses = categoryDtos.stream()
+                .map(categoryDto -> new CategorysResponse(categoryDto.id(), categoryDto.name()))
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(categoryResponses);
+    }
 }
