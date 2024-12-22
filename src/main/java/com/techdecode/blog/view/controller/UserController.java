@@ -3,11 +3,15 @@ package com.techdecode.blog.view.controller;
 import com.techdecode.blog.dto.UserDto;
 import com.techdecode.blog.dto.UserSignInDto;
 import com.techdecode.blog.service.UserService;
+import com.techdecode.blog.view.client.dtos.IpInfoDto;
+import com.techdecode.blog.view.client.ipinfo.IpInfoConsumer;
 import com.techdecode.blog.view.model.user.SignInRequest;
 import com.techdecode.blog.view.model.user.SignInResponse;
 import com.techdecode.blog.view.model.user.SignUpRequest;
 import com.techdecode.blog.view.model.user.SignUpResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +23,16 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("i")
-    String a(){
-        return "oi";
-    }
-
     @PostMapping("signIn")
-    ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest body) {
-        System.out.println("aa");
+    ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest body, @RequestHeader("User-Agent") String userAgent, HttpServletRequest request) {
+
+        String ipAddress = request.getHeader("X-Forwarded-For");
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getRemoteAddr();
+        }
+
         UserSignInDto signInDto = new UserSignInDto(body.email(), body.password());
-        System.out.println(signInDto.email());
-        String token = this.userService.signIn(signInDto);
+        String token = this.userService.signIn(signInDto, userAgent, ipAddress);
         SignInResponse signInResponse = new SignInResponse(token);
 
         return ResponseEntity.status(HttpStatus.OK).body(signInResponse);
