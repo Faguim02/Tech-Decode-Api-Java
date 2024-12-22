@@ -32,7 +32,7 @@ public class SecurityConfiguration {
                     authorize.requestMatchers(HttpMethod.POST, "auth/*").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "comment").authenticated();
                     authorize.requestMatchers(HttpMethod.DELETE, "comment").authenticated();
-                    authorize.anyRequest().hasRole("admin");
+                    authorize.anyRequest().hasRole("ADMIN");
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
