@@ -42,10 +42,11 @@ public class CommentService {
 
         commentModel.setUser(userModel);
         commentModel.setDate_at(this.generateDateActual());
+        commentModel.setUsername(userModel.getName());
 
         CommentModel commentModelRes = this.commentRepository.save(commentModel);
 
-        return new CommentDto(commentModelRes.getId(), commentDto.comment(), commentDto.date_at(), commentDto.user(), commentDto.post());
+        return new CommentDto(commentModelRes.getId(), commentModelRes.getUsername(), commentDto.comment(), commentDto.date_at(), commentDto.user(), commentDto.post());
     }
 
     public String deleteComment(String email, UUID comment_id) {

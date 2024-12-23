@@ -22,7 +22,7 @@ public class CommentController {
     @PostMapping
     ResponseEntity<CommentResponse> createComment(@RequestBody CommentRequest body) {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getName();
-        CommentDto commentDto = new CommentDto(null, body.comment(), null, null, body.post());
+        CommentDto commentDto = new CommentDto(null, email, body.comment(), null, null, body.post());
 
         CommentDto commentDtoRes = this.commentService.createComment(commentDto, email);
 

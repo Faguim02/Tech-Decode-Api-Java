@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public record CommentDto(
         UUID id,
+        String username,
         String comment,
         String date_at,
         UserModel user,
