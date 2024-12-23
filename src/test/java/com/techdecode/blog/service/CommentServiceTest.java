@@ -70,9 +70,6 @@ public class CommentServiceTest {
             PostModel postModel = new PostModel();
             CommentDto commentDto = new CommentDto(UUID.randomUUID(), "fagner", "title", "19 dez 2024", userModel, postModel);
 
-            Mockito.when(userRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
-            Mockito.when(postRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(postModel));
-
             Assertions.assertThrows(ForbiddenException.class, () -> commentService.createComment(commentDto, "fagner@"));
         }
 
