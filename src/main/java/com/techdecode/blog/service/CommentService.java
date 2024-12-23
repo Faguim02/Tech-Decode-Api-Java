@@ -13,6 +13,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,41 +29,51 @@ public class CommentService {
     @Autowired
     private PostRepository postRepository;
 
-    CommentDto createComment(CommentDto commentDto, UUID user_id, UUID post_id) {
+    public CommentDto createComment(CommentDto commentDto, String email) {
         CommentModel commentModel = new CommentModel();
 
         BeanUtils.copyProperties(commentDto, commentModel);
 
-        Optional<UserModel> userModelOptional = this.userRepository.findById(user_id);
-        Optional<PostModel> postModelOptional = this.postRepository.findById(post_id);
+        UserModel userModel = (UserModel) this.userRepository.findByEmail(email);
 
-        if (userModelOptional.isEmpty() || postModelOptional.isEmpty()) {
+        if (userModel == null) {
             throw new ForbiddenException("você não foi autorizado para isso");
         }
 
-        commentModel.setPost(postModelOptional.get());
-        commentModel.setUser(userModelOptional.get());
+        commentModel.setUser(userModel);
+        commentModel.setDate_at(this.generateDateActual());
 
         CommentModel commentModelRes = this.commentRepository.save(commentModel);
 
         return new CommentDto(commentModelRes.getId(), commentDto.comment(), commentDto.date_at(), commentDto.user(), commentDto.post());
     }
 
-    String deleteComment(UUID user_id, UUID comment_id) {
+    public String deleteComment(String email, UUID comment_id) {
         Optional<CommentModel> commentModelOptional = this.commentRepository.findById(comment_id);
 
         if (commentModelOptional.isEmpty()) {
             throw new NotFoundException("comentario inexistente");
         }
 
-        CommentModel commentModel = commentModelOptional.get();
+        UserModel userModel = (UserModel) this.userRepository.findByEmail(email);
 
-        if (!(commentModel.getUser().getId() == user_id)) {
+        if (!Objects.equals(userModel.getEmail(), email)) {
             throw new ForbiddenException("você não foi autorizado para isso");
         }
 
-        this.commentRepository.delete(commentModel);
+        this.commentRepository.delete(commentModelOptional.get());
 
         return "comentario deletado";
+    }
+
+    private String generateDateActual() {
+        // Obter a data atual
+        LocalDate now = LocalDate.now();
+
+        // Configurar o formato desejado
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", new Locale("pt", "BR"));
+
+        // Formatar a data
+        return now.format(formatter);
     }
 }
