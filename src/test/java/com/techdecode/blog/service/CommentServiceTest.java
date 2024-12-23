@@ -87,8 +87,10 @@ public class CommentServiceTest {
             CommentModel commentModel = new CommentModel();
             UserModel userModel = new UserModel();
             userModel.setId(user_id);
+            userModel.setEmail("fagner@");
             commentModel.setUser(userModel);
 
+            Mockito.when(userRepository.findByEmail(Mockito.any(String.class))).thenReturn(userModel);
             Mockito.when(commentRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(commentModel));
 
             String message = commentService.deleteComment("fagner@", comment_id);
@@ -116,8 +118,10 @@ public class CommentServiceTest {
             CommentModel commentModel = new CommentModel();
             UserModel userModel = new UserModel();
             userModel.setId(UUID.randomUUID());
+            userModel.setEmail("pessoa@");
             commentModel.setUser(userModel);
 
+            Mockito.when(userRepository.findByEmail(Mockito.any(String.class))).thenReturn(userModel);
             Mockito.when(commentRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(commentModel));
 
             Assertions.assertThrows(ForbiddenException.class, () -> commentService.deleteComment("fagner@", user_id));
