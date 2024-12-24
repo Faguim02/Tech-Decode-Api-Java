@@ -16,7 +16,7 @@ public class AwsS3Config {
     private String accessKey;
     @Value("${aws.secret-key}")
     private String secretKet;
-    private String bucket = "techdecode";
+    private String bucket = "tech-decode";
 
     @Bean()
     public AmazonS3 s3Client() {
