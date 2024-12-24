@@ -49,7 +49,7 @@ public class PostController {
 
         PostCreateResponse postCreateResponse = new PostCreateResponse(postDtoRes.id(), postDtoRes.title(), postDtoRes.bannerUrl(), postDtoRes.description(), postDtoRes.font(), postDtoRes.data_at());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new String(title.getBytes("ISO-8859-1"), "UTF-8"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(postCreateResponse);
     }
 
     @Operation(summary = "retornar todas as postagens", description = "essa rota retorna todas postagens do blog")
