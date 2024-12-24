@@ -17,7 +17,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,6 +34,8 @@ public class PostServiceTest {
     private PostRepository postRepository;
     @Mock
     private CategoryRepository categoryRepository;
+    @Mock
+    private S3Service s3Service;
 
     @Nested
     @DisplayName("test method: createPost")
@@ -39,7 +43,7 @@ public class PostServiceTest {
 
         @DisplayName("should create post and return data")
         @Test
-        void shouldCreatePost() {
+        void shouldCreatePost() throws IOException {
 
             UUID id = UUID.randomUUID();
             PostModel postModel= new PostModel();
@@ -51,7 +55,7 @@ public class PostServiceTest {
             PostDto postDto = new PostDto(id, postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), null, null);
 
             Mockito.when(postRepository.save(Mockito.any(PostModel.class))).thenReturn(postModel);
-            PostDto postDtoRes = postService.createPost(postDto);
+            PostDto postDtoRes = postService.createPost(postDto, Mockito.any(MultipartFile.class));
 
             Assertions.assertNotNull(postDtoRes);
 
@@ -67,7 +71,7 @@ public class PostServiceTest {
 
             Mockito.when(postRepository.findByTitle(Mockito.any(String.class))).thenReturn(postModel);
 
-            Assertions.assertThrows(ConflictException.class, () -> postService.createPost(postDto));
+            Assertions.assertThrows(ConflictException.class, () -> postService.createPost(postDto, Mockito.any(MultipartFile.class)));
 
         }
 
@@ -196,7 +200,7 @@ public class PostServiceTest {
     class UpdatePost{
         @DisplayName("should update and return post")
         @Test
-        void shouldUpdateAndReturnPost() {
+        void shouldUpdateAndReturnPost() throws IOException {
             // data
             UUID id = UUID.randomUUID();
             PostModel postModel= new PostModel();
@@ -207,11 +211,11 @@ public class PostServiceTest {
 
             PostDto postDto = new PostDto(id, postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), null, null);
 
+            Mockito.when(postRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(postModel));
             // mock
             Mockito.when(postRepository.save(Mockito.any(PostModel.class))).thenReturn(postModel);
-            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(true);
 
-            PostDto postDtoRes = postService.updatePost(id, postDto);
+            PostDto postDtoRes = postService.updatePost(id, postDto, Mockito.any(MultipartFile.class));
 
             Assertions.assertNotNull(postDtoRes);
 
@@ -231,10 +235,10 @@ public class PostServiceTest {
             PostDto postDto = new PostDto(id, postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), null, null);
 
             // mock
+            Mockito.when(postRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(postModel));
             Mockito.when(postRepository.findByTitle(Mockito.any(String.class))).thenReturn(postModel);
-            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(true);
 
-            Assertions.assertThrows(ConflictException.class, () -> postService.updatePost(id, postDto));
+            Assertions.assertThrows(ConflictException.class, () -> postService.updatePost(id, postDto, Mockito.any(MultipartFile.class)));
         }
 
         @DisplayName("should return not found exception")
@@ -251,9 +255,9 @@ public class PostServiceTest {
             PostDto postDto = new PostDto(id, postModel.getTitle(), postModel.getBannerUrl(), postModel.getDescription(), postModel.getFont(), postModel.getDate_at(), null, null);
 
             // mock
-            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(false);
+            Mockito.when(postRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
 
-            Assertions.assertThrows(NotFoundException.class, () -> postService.updatePost(id, postDto));
+            Assertions.assertThrows(NotFoundException.class, () -> postService.updatePost(id, postDto, Mockito.any(MultipartFile.class)));
         }
 
     }
@@ -265,7 +269,9 @@ public class PostServiceTest {
         @Test
         void shouldReturnMessage() {
 
-            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(true);
+            PostModel postModel = new PostModel();
+
+            Mockito.when(postRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(postModel));
 
             String postDeleted = postService.deletePost(UUID.randomUUID());
 
@@ -275,9 +281,6 @@ public class PostServiceTest {
         @DisplayName("should return not found exception")
         @Test
         void shouldReturnNotFoundException() {
-
-            Mockito.when(postRepository.existsById(Mockito.any(UUID.class))).thenReturn(false);
-
             Assertions.assertThrows(NotFoundException.class, () -> postService.deletePost(UUID.randomUUID()));
         }
     }
