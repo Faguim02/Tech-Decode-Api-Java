@@ -97,17 +97,20 @@ public class PostService {
                 .toList();
     }
 
-    public PostDto updatePost(UUID id, PostDto postDto) {
+    public PostDto updatePost(UUID id, PostDto postDto, MultipartFile photo) throws IOException {
         this.deletePost(id);
-        return this.createPost(postDto);
+        return this.createPost(postDto, photo);
     }
 
     public String deletePost(UUID id) {
 
-        if (!this.postRepository.existsById(id)) {
+        Optional<PostModel> postModel = this.postRepository.findById(id);
+
+        if (postModel.isEmpty()) {
             throw new NotFoundException("postagem inexistente");
         }
 
+        this.s3Service.deleteFile("post/"+postModel.get().getTitle(),"tech-decode");
         this.postRepository.deleteById(id);
 
         return "Postagem deletada";
