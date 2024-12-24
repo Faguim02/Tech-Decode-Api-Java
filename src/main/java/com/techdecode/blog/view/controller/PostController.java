@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public class PostController {
             @RequestPart("description") String description,
             @RequestPart("font") String font,
             @RequestPart("category_id") String category_id
-    ) throws UnsupportedEncodingException {
+    ) throws IOException {
 
         CategoryModel categoryModel = new CategoryModel();
         categoryModel.setId(UUID.fromString(formatUTF8(category_id)));
@@ -92,8 +93,21 @@ public class PostController {
 
     @Operation(summary = "editar postagem", description = "nessa rota é informado o id do post que deseja editar e um objrto no body com os dados que deseja alterar")
     @PutMapping("{id}")
-    ResponseEntity<PostResponse> updatePost(@PathVariable("id") UUID id, @RequestBody PostDto postDto) {
-        PostDto postDtoRes = this.postService.updatePost(id, postDto);
+    ResponseEntity<PostResponse> updatePost(
+            @PathVariable("id") UUID id,
+            @RequestPart("photo") MultipartFile photo,
+            @RequestPart("title") String title,
+            @RequestPart("description") String description,
+            @RequestPart("font") String font,
+            @RequestPart("category_id") String category_id
+    ) throws IOException {
+
+        CategoryModel categoryModel = new CategoryModel();
+        categoryModel.setId(UUID.fromString(formatUTF8(category_id)));
+        PostDto postDto = new PostDto(null, formatUTF8(title), null, formatUTF8(description), formatUTF8(font), null, null, categoryModel);
+
+        PostDto postDtoRes = this.postService.updatePost(id, postDto, photo);
+
         PostResponse postResponse = new PostResponse(postDtoRes.id(), postDtoRes.title(), postDtoRes.bannerUrl(), postDtoRes.data_at());
 
         return ResponseEntity.status(HttpStatus.OK).body(postResponse);
