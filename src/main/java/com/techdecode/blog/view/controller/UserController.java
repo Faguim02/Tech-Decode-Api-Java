@@ -10,6 +10,8 @@ import com.techdecode.blog.view.model.user.SignInResponse;
 import com.techdecode.blog.view.model.user.SignUpRequest;
 import com.techdecode.blog.view.model.user.SignUpResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "logar usuario", description = "essa rota faz a authenticação do usuario e retorna um token JWT")
+    @Operation(summary = "logar usuario", description = "essa rota faz a autorização do usuario e retorna um token JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "usuario autorizado"),
+            @ApiResponse(responseCode = "403", description = "não autorizado")
+    })
     @PostMapping("signIn")
     ResponseEntity<SignInResponse> signIn(@RequestBody SignInRequest body, @RequestHeader("User-Agent") String userAgent, HttpServletRequest request) {
 
@@ -43,6 +49,10 @@ public class UserController {
     }
 
     @Operation(summary = "cadastrar conta", description = "essa rota cria um novo usuario ao Techdecode")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "usuario autorizado"),
+            @ApiResponse(responseCode = "409", description = "este email de usuario já existe")
+    })
     @PostMapping("signUp")
     ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest body) {
         UserDto userSend = new UserDto(null, body.name(), body.email(), body.password(), body.userRole());
