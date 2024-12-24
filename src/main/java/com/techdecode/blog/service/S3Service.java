@@ -1,6 +1,7 @@
 package com.techdecode.blog.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,10 @@ public class S3Service {
 
     public String getUrl(String bucketName, String key) {
         return amazonS3.getUrl(bucketName, key).toString();
+    }
+
+    public void deleteFile(String fileName, String bucketName) {
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucketName, fileName);
+        amazonS3.deleteObject(deleteObjectRequest);
     }
 }
