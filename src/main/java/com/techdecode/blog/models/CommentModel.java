@@ -11,6 +11,7 @@ public class CommentModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+    private String username;
     private String comment;
     private String date_at;
 
@@ -29,6 +30,14 @@ public class CommentModel {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getComment() {

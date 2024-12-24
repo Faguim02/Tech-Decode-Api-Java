@@ -1,16 +1,15 @@
-package com.techdecode.blog.dto;
+package com.techdecode.blog.view.model.comment;
 
 import com.techdecode.blog.models.PostModel;
 import com.techdecode.blog.models.UserModel;
 
 import java.util.UUID;
 
-public record CommentDto(
+public record CommentResponse(
         UUID id,
-        String username,
         String comment,
         String date_at,
-        UserModel user,
-        PostModel post
+        PostModel post,
+        UserModel user
 ) {
 }

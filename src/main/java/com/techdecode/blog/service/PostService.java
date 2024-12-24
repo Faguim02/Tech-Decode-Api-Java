@@ -12,7 +12,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +34,7 @@ public class PostService {
         }
 
         PostModel postModel = new PostModel();
+        postModel.setDate_at(this.generateDateActual());
         BeanUtils.copyProperties(postDto, postModel);
 
         PostModel postModelRes = this.postRepository.save(postModel);
@@ -97,5 +101,16 @@ public class PostService {
         this.postRepository.deleteById(id);
 
         return "Postagem deletada";
+    }
+
+    private String generateDateActual() {
+        // Obter a data atual
+        LocalDate now = LocalDate.now();
+
+        // Configurar o formato desejado
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", new Locale("pt", "BR"));
+
+        // Formatar a data
+        return now.format(formatter);
     }
 }

@@ -50,13 +50,12 @@ public class CommentServiceTest {
             UserModel userModel = new UserModel();
             PostModel postModel = new PostModel();
             CommentModel commentModel = new CommentModel();
-            CommentDto commentDto = new CommentDto(UUID.randomUUID(), "title", "19 dez 2024", userModel, postModel);
+            CommentDto commentDto = new CommentDto(UUID.randomUUID(), "fagner", "title", "19 dez 2024", userModel, postModel);
 
-            Mockito.when(userRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(userModel));
-            Mockito.when(postRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(postModel));
+            Mockito.when(userRepository.findByEmail(Mockito.any(String.class))).thenReturn(userModel);
             Mockito.when(commentRepository.save(Mockito.any(CommentModel.class))).thenReturn(commentModel);
 
-            CommentDto commentDtoRes = commentService.createComment(commentDto, user_id, post_id);
+            CommentDto commentDtoRes = commentService.createComment(commentDto, "fagner@");
 
             Assertions.assertNotNull(commentDtoRes);
         }
@@ -69,12 +68,9 @@ public class CommentServiceTest {
 
             UserModel userModel = new UserModel();
             PostModel postModel = new PostModel();
-            CommentDto commentDto = new CommentDto(UUID.randomUUID(), "title", "19 dez 2024", userModel, postModel);
+            CommentDto commentDto = new CommentDto(UUID.randomUUID(), "fagner", "title", "19 dez 2024", userModel, postModel);
 
-            Mockito.when(userRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
-            Mockito.when(postRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(postModel));
-
-            Assertions.assertThrows(ForbiddenException.class, () -> commentService.createComment(commentDto, user_id, post_id));
+            Assertions.assertThrows(ForbiddenException.class, () -> commentService.createComment(commentDto, "fagner@"));
         }
 
     }
@@ -91,11 +87,13 @@ public class CommentServiceTest {
             CommentModel commentModel = new CommentModel();
             UserModel userModel = new UserModel();
             userModel.setId(user_id);
+            userModel.setEmail("fagner@");
             commentModel.setUser(userModel);
 
+            Mockito.when(userRepository.findByEmail(Mockito.any(String.class))).thenReturn(userModel);
             Mockito.when(commentRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(commentModel));
 
-            String message = commentService.deleteComment(user_id, comment_id);
+            String message = commentService.deleteComment("fagner@", comment_id);
 
             Assertions.assertEquals("comentario deletado", message);
         }
@@ -108,7 +106,7 @@ public class CommentServiceTest {
 
             Mockito.when(commentRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.empty());
 
-            Assertions.assertThrows(NotFoundException.class, () -> commentService.deleteComment(user_id, comment_id));
+            Assertions.assertThrows(NotFoundException.class, () -> commentService.deleteComment("fagner@", comment_id));
         }
 
         @DisplayName("should return forbidden exception")
@@ -120,11 +118,13 @@ public class CommentServiceTest {
             CommentModel commentModel = new CommentModel();
             UserModel userModel = new UserModel();
             userModel.setId(UUID.randomUUID());
+            userModel.setEmail("pessoa@");
             commentModel.setUser(userModel);
 
+            Mockito.when(userRepository.findByEmail(Mockito.any(String.class))).thenReturn(userModel);
             Mockito.when(commentRepository.findById(Mockito.any(UUID.class))).thenReturn(Optional.of(commentModel));
 
-            Assertions.assertThrows(ForbiddenException.class, () -> commentService.deleteComment(user_id, comment_id));
+            Assertions.assertThrows(ForbiddenException.class, () -> commentService.deleteComment("fagner@", user_id));
         }
     }
 }
