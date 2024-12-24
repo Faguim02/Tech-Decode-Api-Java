@@ -1,5 +1,7 @@
 package com.techdecode.blog.infra.security;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,10 +19,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@SecurityScheme(name = SecurityConfiguration.SECURITY, type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class SecurityConfiguration {
 
     @Autowired
     private SecurityFilter securityFilter;
+    public static final String SECURITY = "bearerAuth";
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -30,6 +34,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers(HttpMethod.GET, "post").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "auth/*").permitAll();
+                    authorize.requestMatchers("/v3/api-docs/**", "swagger-ui/**", "swagger-ui.html").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "comment").authenticated();
                     authorize.requestMatchers(HttpMethod.DELETE, "comment").authenticated();
                     authorize.anyRequest().hasRole("ADMIN");
