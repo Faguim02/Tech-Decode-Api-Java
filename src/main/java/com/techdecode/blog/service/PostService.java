@@ -11,7 +11,9 @@ import com.techdecode.blog.repository.PostRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,18 +28,26 @@ public class PostService {
     private PostRepository postRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired S3Service s3Service;
 
-    public PostDto createPost(PostDto postDto) {
+    public PostDto createPost(PostDto postDto, MultipartFile photo) throws IOException {
 
         if (this.postRepository.findByTitle(postDto.title()) != null) {
             throw new ConflictException("essa notícia já existe");
         }
 
+        String bucketName = "tech-decode";
+        String key = "post/"+postDto.title();
+
         PostModel postModel = new PostModel();
         postModel.setDate_at(this.generateDateActual());
         BeanUtils.copyProperties(postDto, postModel);
 
+        this.s3Service.uploadFile(bucketName, key, photo);
+        String bannerUrl = this.s3Service.getUrl(bucketName, key);
+        postModel.setBannerUrl(bannerUrl);
         PostModel postModelRes = this.postRepository.save(postModel);
+
         return new PostDto(postModelRes.getId(), postModelRes.getTitle(), postModelRes.getBannerUrl(), postModelRes.getDescription(), postModelRes.getFont(), postModelRes.getDate_at(), null, null);
     }
 
