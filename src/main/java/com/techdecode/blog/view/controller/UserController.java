@@ -2,9 +2,8 @@ package com.techdecode.blog.view.controller;
 
 import com.techdecode.blog.dto.UserDto;
 import com.techdecode.blog.dto.UserSignInDto;
+import com.techdecode.blog.models.roles.UserRole;
 import com.techdecode.blog.service.UserService;
-import com.techdecode.blog.view.client.dtos.IpInfoDto;
-import com.techdecode.blog.view.client.ipinfo.IpInfoConsumer;
 import com.techdecode.blog.view.model.user.SignInRequest;
 import com.techdecode.blog.view.model.user.SignInResponse;
 import com.techdecode.blog.view.model.user.SignUpRequest;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +53,22 @@ public class UserController {
     })
     @PostMapping("signUp")
     ResponseEntity<SignUpResponse> signUp(@RequestBody SignUpRequest body) {
-        UserDto userSend = new UserDto(null, body.name(), body.email(), body.password(), body.userRole());
+        UserDto userSend = new UserDto(null, body.name(), body.email(), body.password(), UserRole.COMMON);
+
+        UserDto userResDto = this.userService.signUp(userSend);
+        SignUpResponse sign = new SignUpResponse(userResDto.id(), userResDto.name(), userResDto.email(), userResDto.password());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(sign);
+    }
+
+    @Operation(summary = "cadastrar conta de administrador", description = "essa rota cria um novo usuario admin ao Techdecode, que é criada somente com a authorização de admins")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "usuario autorizado"),
+            @ApiResponse(responseCode = "409", description = "este email de usuario já existe")
+    })
+    @PostMapping("signUp/admin")
+    ResponseEntity<SignUpResponse> signUpAdmin(@RequestBody SignUpRequest body) {
+        UserDto userSend = new UserDto(null, body.name(), body.email(), body.password(), UserRole.ADMIN);
 
         UserDto userResDto = this.userService.signUp(userSend);
         SignUpResponse sign = new SignUpResponse(userResDto.id(), userResDto.name(), userResDto.email(), userResDto.password());
