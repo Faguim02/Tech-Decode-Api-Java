@@ -1,12 +1,10 @@
 package com.techdecode.blog.service;
 
-import com.techdecode.blog.dto.EmailDto;
 import com.techdecode.blog.dto.InfoNewLoginDto;
 import com.techdecode.blog.dto.UserDto;
 import com.techdecode.blog.dto.UserSignInDto;
 import com.techdecode.blog.infra.security.JwtService;
 import com.techdecode.blog.models.UserModel;
-import com.techdecode.blog.models.exceptions.BadRequestException;
 import com.techdecode.blog.models.exceptions.ConflictException;
 import com.techdecode.blog.repository.UserRepository;
 import com.techdecode.blog.view.client.dtos.IpInfoDto;
@@ -88,7 +86,6 @@ public class UserService {
     private String getDateTime() {
         Date dataAtual = new Date();
         SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        String dataFormatada = formatador.format(dataAtual);
-        return dataFormatada;
+        return formatador.format(dataAtual);
     }
 }
