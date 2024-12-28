@@ -32,7 +32,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers(HttpMethod.GET, "post", "post/*", "post/*/*").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "post", "post/*", "post/*/*", "category").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "auth/*").permitAll();
                     authorize.requestMatchers("/v3/api-docs/**", "swagger-ui/**", "swagger-ui.html").permitAll();
                     authorize.requestMatchers("comment", "comment/*").authenticated();
