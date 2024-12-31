@@ -115,6 +115,10 @@ public class PostService {
             throw new NotFoundException("postagem inexistente");
         }
 
+        if (!postModel.get().getComments().isEmpty()) {
+            throw new ConflictException("Não é possivel deletar, pois essa noticia tem comentarios");
+        }
+
         this.s3Service.deleteFile("post/"+postModel.get().getTitle(),"tech-decode");
         this.postRepository.deleteById(id);
 
