@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  tech-decode-api:
+    image: tech-decode-spring
+    ports:
+      - "8080:8080"
+    depends_on:
+      - tech-decode-db
+
+  tech-decode-db:
+    image: postgres:17.2
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "BncdD123"
+      POSTGRES_DB: techdecode
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/postgres-data:/var/lib/postgresql/data

@@ -43,12 +43,17 @@ public class PostService {
         postModel.setDate_at(this.generateDateActual());
         BeanUtils.copyProperties(postDto, postModel);
 
-        this.s3Service.uploadFile(bucketName, key, photo);
-        String bannerUrl = this.s3Service.getUrl(bucketName, key);
-        postModel.setBannerUrl(bannerUrl);
-        PostModel postModelRes = this.postRepository.save(postModel);
+        try {
+            this.s3Service.uploadFile(bucketName, key, photo);
+            String bannerUrl = this.s3Service.getUrl(bucketName, key);
+            postModel.setBannerUrl(bannerUrl);
+            PostModel postModelRes = this.postRepository.save(postModel);
 
-        return new PostDto(postModelRes.getId(), postModelRes.getTitle(), postModelRes.getBannerUrl(), postModelRes.getDescription(), postModelRes.getFont(), postModelRes.getDate_at(), null, null);
+            return new PostDto(postModelRes.getId(), postModelRes.getTitle(), postModelRes.getBannerUrl(), postModelRes.getDescription(), postModelRes.getFont(), postModelRes.getDate_at(), null, null);
+        } catch (Exception e) {
+            this.s3Service.deleteFile("post/"+postDto.title(),"tech-decode");
+            throw new RuntimeException(e);
+        }
     }
 
     public List<PostDto> findAllPost() {
@@ -108,6 +113,10 @@ public class PostService {
 
         if (postModel.isEmpty()) {
             throw new NotFoundException("postagem inexistente");
+        }
+
+        if (!postModel.get().getComments().isEmpty()) {
+            throw new ConflictException("Não é possivel deletar, pois essa noticia tem comentarios");
         }
 
         this.s3Service.deleteFile("post/"+postModel.get().getTitle(),"tech-decode");

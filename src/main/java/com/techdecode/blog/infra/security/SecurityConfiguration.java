@@ -32,11 +32,10 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers(HttpMethod.GET, "post").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "post", "post/*", "post/*/*", "category").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "auth/*").permitAll();
                     authorize.requestMatchers("/v3/api-docs/**", "swagger-ui/**", "swagger-ui.html").permitAll();
-                    authorize.requestMatchers(HttpMethod.POST, "comment").authenticated();
-                    authorize.requestMatchers(HttpMethod.DELETE, "comment").authenticated();
+                    authorize.requestMatchers("comment", "comment/*").authenticated();
                     authorize.anyRequest().hasRole("ADMIN");
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

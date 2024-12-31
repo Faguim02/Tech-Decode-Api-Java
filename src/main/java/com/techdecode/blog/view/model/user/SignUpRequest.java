@@ -17,9 +17,6 @@ public record SignUpRequest(
         @Valid
         @Min(8)
         @NotBlank
-        String password,
-        @Valid
-        @NotNull
-        UserRole userRole
+        String password
         ) {
 }
