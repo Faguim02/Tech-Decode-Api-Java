@@ -1,91 +1,103 @@
-## Uso
+# :link: Como usar
 
 ### base de url: `http://localhost:8080` (local por enquanto)
+### Seções:
+- [Adicionar novo usuario](#criarconta)
+- [Adicionar novo usuario admin](#criacontaadmin)
+- [Fazer login](#entrar)
 
-## Endpoints
+## User
 
-### - acessar todas as noticias `GET` `/post`
-#### Response `OK` `200`:
-```json
-[
-    {
-        "id": "807f6d10-0530-454c-8aa0-b0d5cafc15c7",
-        "title": "New ias",
-        "bannerUrl": "aa",
-        "date_at": "12/12/2001"
-    },
-    {
-        "id": "811c3005-c88c-456c-94e4-316c1b275cdf",
-        "title": "Novidade",
-        "bannerUrl": "aass",
-        "date_at": "29/07/2024"
-    }
-]
-```
+<h3 id="criarconta">Adicionar novo usuario</h3>
 
-#
-
-### - acessar detalhes de uma unica noticías `get` `/post/{id}`
-
-#### Response `OK` `200`:
+#### Requisição
+- só será autorizado a fazer essa requisição
+- rota `/auth/signUp`
+- body:
 ```json
 {
-  "id": "807f6d10-0530-454c-8aa0-b0d5cafc15c7",
-  "title": "New ias",
-  "bannerUrl": "aa",
-  "description": "aaaa",
-  "font": "eu",
-  "date_at": "12/12/2001",
-  "comments": [
-    {
-      "id": "fc8ba455-eb99-4334-8392-c49a829067ca",
-      "name": "Fagner",
-      "comment": "oi",
-      "date": "00/00/0000"
-    },
-    {
-      "id": "75d8245d-8756-4bd7-9597-0bace9716d08",
-      "name": "Fagner",
-      "comment": "oi",
-      "date": "00/00/0000"
-    }
-  ]
+  "name": "string",
+  "email": "string",
+  "password": "string"
 }
 ```
 
-#
-
-### - pesquisar por notícia `get` `/post/search/{search}`
-
-#### Response `OK` `200`:
-```json
-[
-  {
-    "id": "811c3005-c88c-456c-94e4-316c1b275cdf",
-    "title": "Novidade",
-    "bannerUrl": "aass",
-    "date_at": "29/07/2024"
-  }
-]
-```
-
-#
-
-### - criar comentarios em uma noticia `post` `/comment`
-#### Body:
+#### Respostas
+- `status: 201` criado com sucesso:
 ```json
 {
-  "name": "seu nome",
-  "comment": "comentario",
-  "post_id": "807f6d10-0530-454c-8aa0-b0d5cafc15c7"
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "email": "string",
+  "password": "string"
 }
 ```
-#### Response `OK` `200`:
+
+
+- `status: 409` titulo da noticia já existe
 ```json
 {
-    "id": "75d8245d-8756-4bd7-9597-0bace9716d08",
-    "name": "seu nome",
-    "comment": "comentario",
-    "date": "00/00/0000"
+  "title":  "conflict",
+  "message": "string",
+  "status": 409
 }
 ```
+#
+<h3 id="criacontaadmin">Adicionar novo usuario admin</h3>
+
+#### Requisição
+- rota `/auth/signUp/admin`
+- headers: `Authorization: Bearer token` token com autorização de admin
+- body:
+```json
+{
+  "name": "string",
+  "email": "string",
+  "password": "string"
+}
+```
+
+#### Respostas
+- `status: 201` criado com sucesso:
+```json
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "email": "string",
+  "password": "string"
+}
+```
+
+
+- `status: 409` titulo da noticia já existe
+```json
+{
+  "title":  "conflict",
+  "message": "string",
+  "status": 409
+}
+```
+- `status: 403` não autorizado
+#
+<h3 id="entrar">Fazer login</h3>
+
+#### Requisição
+- rota `/auth/signIn`
+- body:
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+#### Respostas
+- `status: 200` logado:
+```json
+{
+  "access_token": "string"
+}
+```
+
+- `status: 403` não autorizado
+#
