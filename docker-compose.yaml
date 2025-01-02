@@ -3,6 +3,18 @@ version: '3'
 services:
   tech-decode-api:
     image: tech-decode-spring
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      TOKEN_SECRET: ${TOKEN_SECRET}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      API_KEY_IP_INFO: ${API_KEY_IP_INFO}
     ports:
       - "8080:8080"
     depends_on:
@@ -11,8 +23,8 @@ services:
   tech-decode-db:
     image: postgres:17.2
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "BncdD123"
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: techdecode
     ports:
       - "5432:5432"
