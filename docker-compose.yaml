@@ -16,7 +16,7 @@ services:
       MAIL_PASSWORD: ${MAIL_PASSWORD}
       API_KEY_IP_INFO: ${API_KEY_IP_INFO}
     ports:
-      - "8080:8080"
+      - "80:8080"
     depends_on:
       - tech-decode-db
 
