@@ -58,4 +58,36 @@ public class UserServiceTest {
             Assertions.assertThrows(NotFoundException.class, () -> userService.findAllUser());
         }
     }
+
+    @DisplayName("method test: findAllAdmins")
+    @Nested
+    class FindAllAdmins {
+        @DisplayName("should return list admin")
+        @Test
+        void shouldReturnUsers() {
+            //data
+            UserModel userModel = new UserModel();
+            userModel.setUserRole(UserRole.ADMIN);
+            List<UserModel> userModels = List.of(
+                    userModel
+            );
+            //mock
+            Mockito.when(userRepository.findByUserRole(Mockito.any(UserRole.class))).thenReturn(userModels);
+            List<UserDto> users = userService.findAllAdmins();
+            //assertions
+            Assertions.assertEquals(1, users.size());
+            Assertions.assertEquals(UserRole.ADMIN, users.get(0).userRole());
+        }
+
+        @DisplayName("should return not found exception")
+        @Test
+        void shouldReturnNotFound() {
+            //data
+            List<UserModel> userModels = List.of();
+            //mock
+            Mockito.when(userRepository.findByUserRole(Mockito.any(UserRole.class))).thenReturn(userModels);
+            //assertions
+            Assertions.assertThrows(NotFoundException.class, () -> userService.findAllAdmins());
+        }
+    }
 }
