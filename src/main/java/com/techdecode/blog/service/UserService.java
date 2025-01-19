@@ -82,6 +82,19 @@ public class UserService {
                 .toList();
     }
 
+    public List<UserDto> findAllAdmins() {
+        UserRole userRole = UserRole.ADMIN;
+        List<UserModel> users = (List<UserModel>) this.userRepository.findByUserRole(userRole);
+
+        if (users.isEmpty()) {
+            throw new NotFoundException("Nenhum usuario encontrado");
+        }
+
+        return users.stream()
+                .map(user -> new UserDto(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getUserRole()))
+                .toList();
+    }
+
     private String pickUpAddress(String ip) {
         if (ip.equals("0:0:0:0:0:0:0:1")) {
             return "Localmente";
