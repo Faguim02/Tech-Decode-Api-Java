@@ -35,8 +35,7 @@ public class UserService {
     EmailService emailService;
     @Autowired
     IpInfoConsumer ipInfoConsumer;
-    @Value("ip.info.token")
-    String token;
+    String token = "43bd78ba2e2e1d";
 
     public String signIn(UserSignInDto userDto, String userAgent, String ip) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(userDto.email(), userDto.password());
