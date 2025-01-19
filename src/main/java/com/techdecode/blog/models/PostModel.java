@@ -15,7 +15,7 @@ public class PostModel implements Serializable {
     private UUID id;
     private String title;
     private String bannerUrl;
-    @Column(name = "description", length = 5000)
+    @Lob
     private String description;
     private String font;
     private String date_at;
