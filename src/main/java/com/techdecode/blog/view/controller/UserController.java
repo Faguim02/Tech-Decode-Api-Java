@@ -2,10 +2,14 @@ package com.techdecode.blog.view.controller;
 
 import com.techdecode.blog.dto.UserDto;
 import com.techdecode.blog.dto.UserSignInDto;
+import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.models.roles.UserRole;
 import com.techdecode.blog.service.UserService;
 import com.techdecode.blog.view.model.user.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -75,11 +79,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(sign);
     }
 
+    @Operation(summary = "todos os usuarios", description = "essa rota retorna os usuarios comuns authenticados no sistema")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "usuarios encontrados", content = @Content(schema = @Schema(implementation = FindAllResponse.class))),
+            @ApiResponse(responseCode = "404", description = "nenhum usuario encontrado", content = @Content(schema = @Schema(implementation = NotFoundException.class)))
+    })
+    @GetMapping("dashboard/user")
     ResponseEntity<FindAllResponse> findAllUser() {
         List<UserDto> userDtos = this.userService.findAllUser();
         return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponse(userDtos, userDtos.size()));
     }
 
+    @Operation(summary = "todos os administradores", description = "essa rota retorna os administradores do sistema")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "admins encontrados", content = @Content(schema = @Schema(implementation = FindAllResponse.class))),
+            @ApiResponse(responseCode = "404", description = "nenhum admin encontrado", content = @Content(schema = @Schema(implementation = NotFoundException.class)))
+    })
+    @GetMapping("dashboard/admin")
     ResponseEntity<FindAllResponse> findAllAdmins() {
         List<UserDto> userDtos = this.userService.findAllAdmins();
         return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponse(userDtos, userDtos.size()));
