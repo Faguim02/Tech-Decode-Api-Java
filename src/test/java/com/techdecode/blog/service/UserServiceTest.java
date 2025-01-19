@@ -2,6 +2,7 @@ package com.techdecode.blog.service;
 
 import com.techdecode.blog.dto.UserDto;
 import com.techdecode.blog.models.UserModel;
+import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.models.roles.UserRole;
 import com.techdecode.blog.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -33,14 +34,28 @@ public class UserServiceTest {
         @Test
         void shouldReturnUsers() {
             //data
+            UserModel userModel = new UserModel();
+            userModel.setUserRole(UserRole.COMMON);
             List<UserModel> userModels = List.of(
-                    new UserModel()
+                    userModel
             );
             //mock
             Mockito.when(userRepository.findByUserRole(Mockito.any(UserRole.class))).thenReturn(userModels);
             List<UserDto> users = userService.findAllUser();
             //assertions
             Assertions.assertEquals(1, users.size());
+            Assertions.assertEquals(UserRole.COMMON, users.get(0).userRole());
+        }
+
+        @DisplayName("should return not found exception")
+        @Test
+        void shouldReturnNotFound() {
+            //data
+            List<UserModel> userModels = List.of();
+            //mock
+            Mockito.when(userRepository.findByUserRole(Mockito.any(UserRole.class))).thenReturn(userModels);
+            //assertions
+            Assertions.assertThrows(NotFoundException.class, () -> userService.findAllUser());
         }
     }
 }
