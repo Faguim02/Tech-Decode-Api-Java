@@ -6,6 +6,7 @@ import com.techdecode.blog.dto.UserSignInDto;
 import com.techdecode.blog.infra.security.JwtService;
 import com.techdecode.blog.models.UserModel;
 import com.techdecode.blog.models.exceptions.ConflictException;
+import com.techdecode.blog.models.exceptions.NotFoundException;
 import com.techdecode.blog.repository.UserRepository;
 import com.techdecode.blog.view.client.dtos.IpInfoDto;
 import com.techdecode.blog.view.client.ipinfo.IpInfoConsumer;
@@ -21,6 +22,7 @@ import ua_parser.Parser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -64,6 +66,18 @@ public class UserService {
         this.emailService.sendWelcomeMessage(userDto.id(), userDto.email(), userDto.name());
 
         return new UserDto(userModel.getId(), userModel.getName(), userModel.getEmail(), userModel.getPassword(), userModel.getUserRole());
+    }
+
+    public List<UserDto> findAllUser() {
+        List<UserModel> users = this.userRepository.findAll();
+
+        if (users.isEmpty()) {
+            throw new NotFoundException("Nenhum usuario encontrado");
+        }
+
+        return users.stream()
+                .map(user -> new UserDto(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getUserRole()))
+                .toList();
     }
 
     private String pickUpAddress(String ip) {
