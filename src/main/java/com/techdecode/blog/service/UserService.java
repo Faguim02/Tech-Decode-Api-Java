@@ -7,6 +7,7 @@ import com.techdecode.blog.infra.security.JwtService;
 import com.techdecode.blog.models.UserModel;
 import com.techdecode.blog.models.exceptions.ConflictException;
 import com.techdecode.blog.models.exceptions.NotFoundException;
+import com.techdecode.blog.models.roles.UserRole;
 import com.techdecode.blog.repository.UserRepository;
 import com.techdecode.blog.view.client.dtos.IpInfoDto;
 import com.techdecode.blog.view.client.ipinfo.IpInfoConsumer;
@@ -69,7 +70,8 @@ public class UserService {
     }
 
     public List<UserDto> findAllUser() {
-        List<UserModel> users = this.userRepository.findAll();
+        UserRole userRole = UserRole.COMMON;
+        List<UserModel> users = (List<UserModel>) this.userRepository.findByUserRole(userRole);
 
         if (users.isEmpty()) {
             throw new NotFoundException("Nenhum usuario encontrado");
