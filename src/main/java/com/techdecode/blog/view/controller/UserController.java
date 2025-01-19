@@ -4,10 +4,7 @@ import com.techdecode.blog.dto.UserDto;
 import com.techdecode.blog.dto.UserSignInDto;
 import com.techdecode.blog.models.roles.UserRole;
 import com.techdecode.blog.service.UserService;
-import com.techdecode.blog.view.model.user.SignInRequest;
-import com.techdecode.blog.view.model.user.SignInResponse;
-import com.techdecode.blog.view.model.user.SignUpRequest;
-import com.techdecode.blog.view.model.user.SignUpResponse;
+import com.techdecode.blog.view.model.user.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("auth")
@@ -74,6 +73,16 @@ public class UserController {
         SignUpResponse sign = new SignUpResponse(userResDto.id(), userResDto.name(), userResDto.email(), userResDto.password());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(sign);
+    }
+
+    ResponseEntity<FindAllResponse> findAllUser() {
+        List<UserDto> userDtos = this.userService.findAllUser();
+        return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponse(userDtos, userDtos.size()));
+    }
+
+    ResponseEntity<FindAllResponse> findAllAdmins() {
+        List<UserDto> userDtos = this.userService.findAllAdmins();
+        return ResponseEntity.status(HttpStatus.OK).body(new FindAllResponse(userDtos, userDtos.size()));
     }
 
 }
