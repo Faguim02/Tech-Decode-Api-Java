@@ -1,11 +1,11 @@
 package com.techdecode.blog.dto;
 
-import java.util.List;
 import java.util.UUID;
 
-public record CategoryDto(
+public record PostSmallDto(
         UUID id,
         String title,
-        List<PostSmallDto> postModels
+        String bannerUrl,
+        String date_at
 ) {
 }

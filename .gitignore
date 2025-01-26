@@ -37,3 +37,6 @@ build/
 
 ## database
 /database/postgres-data
+
+## ambiente depuração
+/developenviroment/**
