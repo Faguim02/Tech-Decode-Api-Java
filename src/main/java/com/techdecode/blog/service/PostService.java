@@ -2,6 +2,7 @@ package com.techdecode.blog.service;
 
 import com.techdecode.blog.dto.CategoryDto;
 import com.techdecode.blog.dto.PostDto;
+import com.techdecode.blog.dto.PostSmallDto;
 import com.techdecode.blog.models.CategoryModel;
 import com.techdecode.blog.models.PostModel;
 import com.techdecode.blog.models.exceptions.ConflictException;
@@ -11,6 +12,7 @@ import com.techdecode.blog.repository.PostRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -83,7 +85,9 @@ public class PostService {
         );
     }
 
+    @Transactional
     public CategoryDto findPostByCategory(UUID id) {
+
         Optional<CategoryModel> categoryModelOptional = this.categoryRepository.findById(id);
 
         if (categoryModelOptional.isEmpty()) {
@@ -92,9 +96,14 @@ public class PostService {
 
         CategoryModel categoryModel = categoryModelOptional.get();
 
-        return new CategoryDto(categoryModel.getId(), categoryModel.getTitle(), categoryModel.getPostModels());
+        List<PostSmallDto> postSmallDtos = categoryModel.getPostModels().stream()
+                .map(postModel -> new PostSmallDto(postModel.getId(), postModel.getTitle(), postModel.getBannerUrl(), postModel.getDate_at()))
+                .toList();
+
+        return new CategoryDto(categoryModel.getId(), categoryModel.getTitle(), postSmallDtos);
     }
 
+    @Transactional
     public List<PostDto> searchPost(String search) {
         List<PostModel> postModels = this.postRepository.findByTitleContaining(search);
         return postModels.stream()
