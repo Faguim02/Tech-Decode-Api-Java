@@ -16,6 +16,7 @@ public class PostModel implements Serializable {
     private String title;
     private String bannerUrl;
     @Lob
+    @Basic(fetch = FetchType.EAGER)
     private String description;
     private String font;
     private String date_at;
