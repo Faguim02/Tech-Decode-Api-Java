@@ -2,11 +2,8 @@
 <div align="center">
     <img src="assets/logo.png" alt="logo"/>
 </div>
-<div align="center">
-  <p>
-    <strong>Saiba para onde o seu dinheiro está correndo</strong>
-  </p>
-</div>
+
+#
 
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
@@ -36,10 +33,6 @@ O projeto é livre para que qualquer tipo de contribuição seja bem vinda.
 Caso tenho vontande em contribuir com o projeto
 [Click aqui para seguir os passos](./Contribuir.md).
 
-
-
-
-
 ## Tecnologias utilizadas
 - Java 17
 - Postgresql 17
@@ -51,3 +44,7 @@ Caso tenho vontande em contribuir com o projeto
 - JUnit
 - Mockito
 - Aws S3
+
+## Diagrama de classes
+
+<img src="assets/diagram_class.svg"/>
