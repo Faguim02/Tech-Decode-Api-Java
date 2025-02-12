@@ -26,12 +26,12 @@ acesse no navegador para sober como usar as rotas:\
 `http://localhost:8080/swagger-ui.html`
 \
 ou acesse: \
-[Click aqui para seguir os passos](./UseApi.md).
+[Click aqui para seguir os passos](./markdown/UseApi.md).
 
 ## Como posso contribuir com o projeto
 O projeto é livre para que qualquer tipo de contribuição seja bem vinda.
 Caso tenho vontande em contribuir com o projeto
-[Click aqui para seguir os passos](./Contribuir.md).
+[Click aqui para seguir os passos](./markdown/Contribuir.md).
 
 ## Tecnologias utilizadas
 - Java 17
