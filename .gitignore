@@ -1,5 +1,5 @@
 HELP.md
-target/
+*/target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -36,7 +36,7 @@ build/
 .env
 
 ## database
-/database/postgres-data
+/ms-api-techdecode/database/postgres-data
 
 ## ambiente depuração
-/developenviroment/**
+/ms-api-techdecode/developenviroment/**
