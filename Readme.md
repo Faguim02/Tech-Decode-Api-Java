@@ -45,6 +45,10 @@ Caso tenho vontande em contribuir com o projeto
 - Mockito
 - Aws S3
 
+## Arquitetura de microsserviço e docker
+
+<img src="assets/architecture.svg"/>
+
 ## Diagrama de classes
 
 <img src="assets/diagram_class.svg"/>
