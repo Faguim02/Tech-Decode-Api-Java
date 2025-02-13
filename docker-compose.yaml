@@ -19,7 +19,7 @@ services:
   tech-decode-mail:
     image: tech-decode-mail  
     ports:
-      - "80:8082"
+      - "82:8082"
     environment:
       MAIL_HOST: ${MAIL_HOST}
       MAIL_PORT: ${MAIL_PORT}
