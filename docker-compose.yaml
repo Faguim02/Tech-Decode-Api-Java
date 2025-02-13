@@ -20,6 +20,11 @@ services:
     depends_on:
       - tech-decode-db
 
+  tech-decode-mail:
+    image: tech-decode-mail  
+    ports:
+      - "80:8082"
+
   tech-decode-db:
     image: postgres:17.2
     environment:
