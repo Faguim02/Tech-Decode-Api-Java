@@ -10,10 +10,6 @@ services:
       TOKEN_SECRET: ${TOKEN_SECRET}
       AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
       AWS_SECRET_KEY: ${AWS_SECRET_KEY}
-      MAIL_HOST: ${MAIL_HOST}
-      MAIL_PORT: ${MAIL_PORT}
-      MAIL_USERNAME: ${MAIL_USERNAME}
-      MAIL_PASSWORD: ${MAIL_PASSWORD}
       API_KEY_IP_INFO: ${API_KEY_IP_INFO}
     ports:
       - "80:8080"
@@ -24,6 +20,11 @@ services:
     image: tech-decode-mail  
     ports:
       - "80:8082"
+    environment:
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
 
   tech-decode-db:
     image: postgres:17.2
