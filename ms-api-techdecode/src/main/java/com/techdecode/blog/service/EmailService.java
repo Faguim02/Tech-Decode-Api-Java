@@ -2,6 +2,7 @@ package com.techdecode.blog.service;
 
 import com.techdecode.blog.dto.EmailDto;
 import com.techdecode.blog.dto.InfoNewLoginDto;
+import com.techdecode.blog.kafka.producers.EmailProducer;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,9 @@ import java.util.UUID;
 
 @Service
 public class EmailService {
+
     @Autowired
-    private JavaMailSender javaMailSender;
-    @Value("spring.mail.username")
-    private String mailFrom;
+    private EmailProducer emailProducer;
 
     public void sendWelcomeMessage(UUID id, String emailTo, String name) {
         String subject = "Bem-vindo(a) ao TechDecode! \uD83D\uDE80";
@@ -45,7 +45,7 @@ public class EmailService {
                 Fundador do TechDecode""", name);
 
         EmailDto emailDto = new EmailDto(id,emailTo, subject, text);
-        this.sendToEmail(emailDto);
+        this.emailProducer.sendMessage(emailDto);
     }
 
     public void sendInfoNewLoginDetected(UUID id, String emailTo, String name, InfoNewLoginDto newLoginDto) {
@@ -70,26 +70,6 @@ public class EmailService {
                 Equipe TechDecode \uD83D\uDE80""", name, newLoginDto.date(), newLoginDto.dispositive(), newLoginDto.location());
 
         EmailDto emailDto = new EmailDto(id,emailTo, subject, text);
-        this.sendToEmail(emailDto);
-    }
-
-    private void sendToEmail(EmailDto emailDto) {
-        try {
-
-            MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-
-            mimeMessageHelper.setText(emailDto.text());
-            mimeMessageHelper.setTo(emailDto.emailTo());
-            mimeMessageHelper.setSubject(emailDto.subject());
-            mimeMessageHelper.setFrom(mailFrom);
-
-            this.javaMailSender.send(mimeMessage);
-
-        } catch (MailException e) {
-            throw new RuntimeException("error send message");
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
+        this.emailProducer.sendMessage(emailDto);
     }
 }
