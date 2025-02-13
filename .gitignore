@@ -36,7 +36,7 @@ build/
 .env
 
 ## database
-/ms-api-techdecode/database/postgres-data
+/database/postgres-data
 
 ## ambiente depuração
 /ms-api-techdecode/developenviroment/**
